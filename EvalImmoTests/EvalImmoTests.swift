@@ -66,17 +66,16 @@ class EvalImmoTests: XCTestCase {
         }
     }
 
-    func testLegacyControllerDoesNotAccumulateTotalPriceBetweenCalculations() {
-        let controller = MyProjectController()
-        let prices = controller.allPricesInArray(
+    func testInvestmentCalculatorDoesNotAccumulateTotalPriceBetweenCalculations() throws {
+        let costs = try calculator.costs(
             price: 100_000,
             notaryFees: 8_000,
             agencyCosts: 5_000,
             works: 7_000
         )
 
-        XCTAssertEqual(controller.calculeTotalPrice(allPrices: prices), 120_000)
-        XCTAssertEqual(controller.calculeTotalPrice(allPrices: prices), 120_000)
+        XCTAssertEqual(costs.total, 120_000)
+        XCTAssertEqual(costs.total, 120_000)
     }
 
     @MainActor
