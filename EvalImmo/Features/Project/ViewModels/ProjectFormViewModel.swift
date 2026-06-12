@@ -1,0 +1,79 @@
+//
+//  ProjectFormViewModel.swift
+//  EvalImmo
+//
+
+import Foundation
+
+final class ProjectFormViewModel: ObservableObject {
+    @Published var draft: InvestmentProjectDraft
+    @Published private(set) var currentProject: InvestmentProjectSnapshot?
+    @Published var errorMessage: String?
+
+    let taxRates: [Double] = [0, 11, 30, 41, 45]
+
+    private let calculator: InvestmentCalculator
+    private let repository: ProjectRepository
+
+    init(
+        draft: InvestmentProjectDraft = InvestmentProjectDraft(),
+        calculator: InvestmentCalculator = InvestmentCalculator(),
+        repository: ProjectRepository = InMemoryProjectRepository()
+    ) {
+        self.draft = draft
+        self.calculator = calculator
+        self.repository = repository
+    }
+
+    @MainActor
+    func calculate() {
+        do {
+            currentProject = try makeProjectSnapshot()
+            errorMessage = nil
+        } catch InvestmentCalculationError.invalidTotalPrice {
+            currentProject = nil
+            errorMessage = "Le prix total doit etre superieur a zero."
+        } catch {
+            currentProject = nil
+            errorMessage = "Impossible de calculer les indicateurs."
+        }
+    }
+
+    @MainActor
+    func save() {
+        do {
+            let project = try makeProjectSnapshot()
+            try repository.save(project)
+            currentProject = project
+            errorMessage = nil
+        } catch InvestmentCalculationError.invalidTotalPrice {
+            errorMessage = "Le projet doit etre calcule avec un prix total valide."
+        } catch {
+            errorMessage = "Impossible de sauvegarder le projet."
+        }
+    }
+
+    private func makeProjectSnapshot() throws -> InvestmentProjectSnapshot {
+        let costs = try calculator.costs(
+            price: draft.purchasePrice,
+            notaryFees: draft.notaryFees,
+            agencyCosts: draft.agencyCosts,
+            works: draft.worksCost
+        )
+        let indicators = try calculator.indicators(
+            monthlyRent: draft.monthlyRent,
+            monthlyCondominiumFees: draft.monthlyCondominiumFees,
+            taxRate: draft.taxRate,
+            monthlyPayment: draft.monthlyPayment,
+            monthlyPropertyTax: draft.monthlyPropertyTax
+        )
+        let result = try calculator.yields(costs: costs, indicators: indicators)
+
+        return InvestmentProjectSnapshot(
+            draft: draft,
+            costs: costs,
+            indicators: indicators,
+            result: result
+        )
+    }
+}
