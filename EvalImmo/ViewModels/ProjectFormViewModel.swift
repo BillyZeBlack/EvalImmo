@@ -13,16 +13,13 @@ final class ProjectFormViewModel: ObservableObject {
     let taxRates: [Double] = [0, 11, 30, 41, 45]
 
     private let calculator: InvestmentCalculator
-    private let repository: ProjectRepository
 
     init(
         draft: InvestmentProjectDraft = InvestmentProjectDraft(),
-        calculator: InvestmentCalculator = InvestmentCalculator(),
-        repository: ProjectRepository = InMemoryProjectRepository()
+        calculator: InvestmentCalculator = InvestmentCalculator()
     ) {
         self.draft = draft
         self.calculator = calculator
-        self.repository = repository
     }
 
     @MainActor
@@ -40,17 +37,19 @@ final class ProjectFormViewModel: ObservableObject {
     }
 
     @MainActor
-    func save() {
+    func save() -> InvestmentProjectSnapshot? {
         do {
             let project = try makeProjectSnapshot()
-            try repository.save(project)
             currentProject = project
             errorMessage = nil
+            return project
         } catch InvestmentCalculationError.invalidTotalPrice {
             errorMessage = "Le projet doit etre calcule avec un prix total valide."
         } catch {
             errorMessage = "Impossible de sauvegarder le projet."
         }
+
+        return nil
     }
 
     private func makeProjectSnapshot() throws -> InvestmentProjectSnapshot {

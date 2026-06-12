@@ -6,14 +6,24 @@
 import Foundation
 
 final class AppState: ObservableObject {
-    enum MainSection: Hashable {
-        case projects
+    enum Route: Hashable {
         case newProject
+        case projectDetail(UUID)
     }
 
-    @Published var selectedSection: MainSection
+    @Published var path: [Route]
 
-    init(selectedSection: MainSection = .newProject) {
-        self.selectedSection = selectedSection
+    init(path: [Route] = []) {
+        self.path = path
+    }
+
+    @MainActor
+    func showNewProject() {
+        path.append(.newProject)
+    }
+
+    @MainActor
+    func showProject(id: UUID) {
+        path = [.projectDetail(id)]
     }
 }

@@ -7,51 +7,34 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject private var appState: AppState
+    @StateObject private var projectStore = ProjectStore()
 
     var body: some View {
-        TabView(selection: $appState.selectedSection) {
-            ProjectListPlaceholderView()
-                .tabItem {
-                    Label("Projets", systemImage: "list.bullet")
+        NavigationStack(path: $appState.path) {
+            ProjectListView(
+                store: projectStore,
+                onAddProject: appState.showNewProject
+            )
+            .navigationDestination(for: AppState.Route.self) { route in
+                switch route {
+                case .newProject:
+                    ProjectFormView { project in
+                        projectStore.save(project)
+                        appState.showProject(id: project.id)
+                    }
+                case .projectDetail(let id):
+                    if let project = projectStore.project(with: id) {
+                        ProjectDetailView(project: project)
+                    } else {
+                        ContentUnavailableView(
+                            "Projet introuvable",
+                            systemImage: "exclamationmark.triangle",
+                            description: Text("Ce projet n'est plus disponible.")
+                        )
+                    }
                 }
-                .tag(AppState.MainSection.projects)
-
-            ProjectFormView()
-                .tabItem {
-                    Label("Nouveau", systemImage: "plus.circle")
-                }
-                .tag(AppState.MainSection.newProject)
-        }
-    }
-}
-
-private struct ProjectListPlaceholderView: View {
-    var body: some View {
-        NavigationView {
-            List {
-                ContentUnavailableRow(
-                    title: "Aucun projet",
-                    subtitle: "Les projets sauvegardes apparaitront ici."
-                )
             }
-            .navigationTitle("Projets")
         }
-    }
-}
-
-private struct ContentUnavailableRow: View {
-    let title: String
-    let subtitle: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.headline)
-            Text(subtitle)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-        .padding(.vertical, 8)
     }
 }
 

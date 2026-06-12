@@ -6,6 +6,8 @@
 import Foundation
 
 protocol ProjectRepository {
+    var projects: [InvestmentProjectSnapshot] { get }
+
     func save(_ project: InvestmentProjectSnapshot) throws
 }
 

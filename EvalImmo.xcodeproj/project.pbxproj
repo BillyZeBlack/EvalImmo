@@ -13,6 +13,9 @@
 		9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */; };
 		9F371AC4263AA67300FF5835 /* ProjectFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABD263AA67300FF5835 /* ProjectFormView.swift */; };
 		9F371AC5263AA67300FF5835 /* ProjectRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABE263AA67300FF5835 /* ProjectRepository.swift */; };
+		9F371AE1263AA67300FF5835 /* ProjectStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ADE263AA67300FF5835 /* ProjectStore.swift */; };
+		9F371AE2263AA67300FF5835 /* ProjectListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ADF263AA67300FF5835 /* ProjectListView.swift */; };
+		9F371AE3263AA67300FF5835 /* ProjectDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */; };
 		9F371AD4263AA67300FF5835 /* EvalImmoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */; };
 		9F371AD5263AA67300FF5835 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD3263AA67300FF5835 /* RootView.swift */; };
 		9F371AD8263AA67300FF5835 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD7263AA67300FF5835 /* AppState.swift */; };
@@ -46,6 +49,9 @@
 		9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormViewModel.swift; sourceTree = "<group>"; };
 		9F371ABD263AA67300FF5835 /* ProjectFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormView.swift; sourceTree = "<group>"; };
 		9F371ABE263AA67300FF5835 /* ProjectRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectRepository.swift; sourceTree = "<group>"; };
+		9F371ADE263AA67300FF5835 /* ProjectStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStore.swift; sourceTree = "<group>"; };
+		9F371ADF263AA67300FF5835 /* ProjectListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListView.swift; sourceTree = "<group>"; };
+		9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
 		9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvalImmoApp.swift; sourceTree = "<group>"; };
 		9F371AD3263AA67300FF5835 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		9F371AD7263AA67300FF5835 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -152,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */,
+				9F371ADE263AA67300FF5835 /* ProjectStore.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -159,7 +166,9 @@
 		9F371ACA263AA67300FF5835 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */,
 				9F371ABD263AA67300FF5835 /* ProjectFormView.swift */,
+				9F371ADF263AA67300FF5835 /* ProjectListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -334,8 +343,11 @@
 				9F371AB8263AA67300FF5835 /* InvestmentCalculator.swift in Sources */,
 				9F371AC1263AA67300FF5835 /* InvestmentProjectDraft.swift in Sources */,
 				9F371AC4263AA67300FF5835 /* ProjectFormView.swift in Sources */,
+				9F371AE3263AA67300FF5835 /* ProjectDetailView.swift in Sources */,
 				9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */,
+				9F371AE1263AA67300FF5835 /* ProjectStore.swift in Sources */,
 				9F371AD5263AA67300FF5835 /* RootView.swift in Sources */,
+				9F371AE2263AA67300FF5835 /* ProjectListView.swift in Sources */,
 				9F371AC2263AA67300FF5835 /* InvestmentProjectSnapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

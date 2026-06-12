@@ -7,28 +7,31 @@ import SwiftUI
 
 struct ProjectFormView: View {
     @StateObject private var viewModel: ProjectFormViewModel
+    private let onSave: (InvestmentProjectSnapshot) -> Void
 
-    init(viewModel: ProjectFormViewModel = ProjectFormViewModel()) {
+    init(
+        viewModel: ProjectFormViewModel = ProjectFormViewModel(),
+        onSave: @escaping (InvestmentProjectSnapshot) -> Void = { _ in }
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.onSave = onSave
     }
 
     var body: some View {
-        NavigationView {
-            Form {
-                acquisitionSection
-                rentalSection
-                financingSection
-                resultSection
-                actionSection
-            }
-            .navigationTitle("Mon projet")
-            .alert(item: errorBinding) { message in
-                Alert(
-                    title: Text("Information"),
-                    message: Text(message.value),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
+        Form {
+            acquisitionSection
+            rentalSection
+            financingSection
+            resultSection
+            actionSection
+        }
+        .navigationTitle("Mon projet")
+        .alert(item: errorBinding) { message in
+            Alert(
+                title: Text("Information"),
+                message: Text(message.value),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 
@@ -83,7 +86,8 @@ struct ProjectFormView: View {
             }
 
             Button("Sauvegarder") {
-                viewModel.save()
+                guard let project = viewModel.save() else { return }
+                onSave(project)
             }
             .disabled(viewModel.currentProject == nil)
         }
