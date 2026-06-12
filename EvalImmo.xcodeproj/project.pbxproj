@@ -16,6 +16,8 @@
 		9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */; };
 		9F371AC4263AA67300FF5835 /* ProjectFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABD263AA67300FF5835 /* ProjectFormView.swift */; };
 		9F371AC5263AA67300FF5835 /* ProjectRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABE263AA67300FF5835 /* ProjectRepository.swift */; };
+		9F371AD4263AA67300FF5835 /* EvalImmoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */; };
+		9F371AD5263AA67300FF5835 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD3263AA67300FF5835 /* RootView.swift */; };
 		9F4BD78E2639A82D00647260 /* CustomUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4BD78D2639A82D00647260 /* CustomUIView.swift */; };
 		9F4BD7932639D3D800647260 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4BD7922639D3D800647260 /* MyProjectViewController.swift */; };
 		9F4CADCD26091455006BCF52 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4CADCC26091455006BCF52 /* AppDelegate.swift */; };
@@ -76,6 +78,8 @@
 		9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormViewModel.swift; sourceTree = "<group>"; };
 		9F371ABD263AA67300FF5835 /* ProjectFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormView.swift; sourceTree = "<group>"; };
 		9F371ABE263AA67300FF5835 /* ProjectRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectRepository.swift; sourceTree = "<group>"; };
+		9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvalImmoApp.swift; sourceTree = "<group>"; };
+		9F371AD3263AA67300FF5835 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		9F4BD78D2639A82D00647260 /* CustomUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIView.swift; sourceTree = "<group>"; };
 		9F4BD7922639D3D800647260 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
 		9F4CADC926091455006BCF52 /* EvalImmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EvalImmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -177,6 +181,7 @@
 		9F4CADCB26091455006BCF52 /* EvalImmo */ = {
 			isa = PBXGroup;
 			children = (
+				9F371AD6263AA67300FF5835 /* App */,
 				9F4CAE1A26091639006BCF52 /* Vue */,
 				9F4CAE0A260914FF006BCF52 /* Controleur */,
 				9F371AB9263AA67300FF5835 /* Core */,
@@ -266,6 +271,15 @@
 				9F371ABE263AA67300FF5835 /* ProjectRepository.swift */,
 			);
 			path = Projects;
+			sourceTree = "<group>";
+		};
+		9F371AD6263AA67300FF5835 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */,
+				9F371AD3263AA67300FF5835 /* RootView.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		9F4CADED26091456006BCF52 /* EvalImmoUITests */ = {
@@ -575,6 +589,7 @@
 				9F4CADCD26091455006BCF52 /* AppDelegate.swift in Sources */,
 				9F371AC5263AA67300FF5835 /* ProjectRepository.swift in Sources */,
 				9F8E426626F4D43500802F0E /* ListProjectsViewController.swift in Sources */,
+				9F371AD4263AA67300FF5835 /* EvalImmoApp.swift in Sources */,
 				9F4BD7932639D3D800647260 /* MyProjectViewController.swift in Sources */,
 				9F371AB8263AA67300FF5835 /* InvestmentCalculator.swift in Sources */,
 				9F4CAE01260914BB006BCF52 /* Property.swift in Sources */,
@@ -588,6 +603,7 @@
 				9F4CAE2C2609239C006BCF52 /* LoginViewController.swift in Sources */,
 				9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */,
 				9F8E427026F4D5AB00802F0E /* MenuViewController.swift in Sources */,
+				9F371AD5263AA67300FF5835 /* RootView.swift in Sources */,
 				9F796EB2260BAF5900A533A4 /* CustomUiButton.swift in Sources */,
 				9F4CAE1626091624006BCF52 /* UserControler.swift in Sources */,
 				9F371AC2263AA67300FF5835 /* InvestmentProjectSnapshot.swift in Sources */,
