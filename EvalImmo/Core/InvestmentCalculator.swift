@@ -5,32 +5,6 @@
 
 import Foundation
 
-struct InvestmentCosts: Equatable {
-    let price: Double
-    let notaryFees: Double
-    let agencyCosts: Double
-    let works: Double
-
-    var total: Double {
-        price + notaryFees + agencyCosts + works
-    }
-}
-
-struct InvestmentIndicators: Equatable {
-    let annualRentalPrice: Double
-    let annualCondominiumFees: Double
-    let taxes: Double
-    let monthlyPayment: Double
-    let annualPropertyTax: Double
-}
-
-struct InvestmentYieldResult: Equatable {
-    let grossYield: Double
-    let netYield: Double
-    let netNetYield: Double
-    let monthlyCashflow: Double
-}
-
 enum InvestmentCalculationError: Error, Equatable {
     case invalidTotalPrice
     case invalidInput
