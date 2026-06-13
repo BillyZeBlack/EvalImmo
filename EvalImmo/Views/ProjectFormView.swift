@@ -7,6 +7,7 @@ import SwiftUI
 
 struct ProjectFormView: View {
     @StateObject private var viewModel: ProjectFormViewModel
+    @FocusState private var focusedField: ProjectFormField?
     private let onSave: (InvestmentProjectSnapshot) -> Void
 
     init(
@@ -23,9 +24,20 @@ struct ProjectFormView: View {
             rentalSection
             financingSection
             resultSection
-            actionSection
         }
         .navigationTitle("Mon projet")
+        .safeAreaInset(edge: .bottom) {
+            actionBar
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+
+                Button("OK") {
+                    focusedField = nil
+                }
+            }
+        }
         .alert(item: errorBinding) { message in
             Alert(
                 title: Text("Information"),
@@ -36,36 +48,87 @@ struct ProjectFormView: View {
     }
 
     private var acquisitionSection: some View {
-        Section(header: Text("Acquisition")) {
-            decimalField("Prix du bien", value: $viewModel.draft.purchasePrice)
-            decimalField("Frais de notaire", value: $viewModel.draft.notaryFees)
-            decimalField("Frais d'agence", value: $viewModel.draft.agencyCosts)
-            decimalField("Travaux", value: $viewModel.draft.worksCost)
+        Section {
+            decimalField(
+                "Prix d'achat",
+                detail: "Prix net vendeur du bien.",
+                value: $viewModel.draft.purchasePrice,
+                field: .purchasePrice
+            )
+            decimalField(
+                "Frais de notaire",
+                detail: "Montant estime a l'acquisition.",
+                value: $viewModel.draft.notaryFees,
+                field: .notaryFees
+            )
+            decimalField(
+                "Frais d'agence",
+                detail: "Honoraires inclus dans le projet.",
+                value: $viewModel.draft.agencyCosts,
+                field: .agencyCosts
+            )
+            decimalField(
+                "Travaux",
+                detail: "Budget travaux conserve dans le calcul.",
+                value: $viewModel.draft.worksCost,
+                field: .worksCost
+            )
+        } header: {
+            Label("Acquisition", systemImage: "house")
         }
     }
 
     private var rentalSection: some View {
-        Section(header: Text("Revenus et charges")) {
-            decimalField("Loyer mensuel", value: $viewModel.draft.monthlyRent)
-            decimalField("Charges de copropriete", value: $viewModel.draft.monthlyCondominiumFees)
-            decimalField("Taxe fonciere mensuelle", value: $viewModel.draft.monthlyPropertyTax)
+        Section {
+            decimalField(
+                "Loyer mensuel",
+                detail: "Loyer hors charges.",
+                value: $viewModel.draft.monthlyRent,
+                field: .monthlyRent
+            )
+            decimalField(
+                "Charges de copropriete",
+                detail: "Montant mensuel.",
+                value: $viewModel.draft.monthlyCondominiumFees,
+                field: .monthlyCondominiumFees
+            )
+            decimalField(
+                "Taxe fonciere",
+                detail: "Equivalent mensuel.",
+                value: $viewModel.draft.monthlyPropertyTax,
+                field: .monthlyPropertyTax
+            )
 
-            Picker("TMI", selection: $viewModel.draft.taxRate) {
+            Picker(selection: $viewModel.draft.taxRate) {
                 ForEach(viewModel.taxRates, id: \.self) { rate in
                     Text("\(rate, specifier: "%.0f")%").tag(rate)
                 }
+            } label: {
+                LabeledFieldTitle(
+                    title: "Taux marginal d'imposition",
+                    detail: "TMI utilise pour l'impot."
+                )
             }
+        } header: {
+            Label("Revenus et charges", systemImage: "chart.line.uptrend.xyaxis")
         }
     }
 
     private var financingSection: some View {
-        Section(header: Text("Financement")) {
-            decimalField("Mensualite", value: $viewModel.draft.monthlyPayment)
+        Section {
+            decimalField(
+                "Mensualite de credit",
+                detail: "Credit assurance comprise si applicable.",
+                value: $viewModel.draft.monthlyPayment,
+                field: .monthlyPayment
+            )
+        } header: {
+            Label("Financement", systemImage: "creditcard")
         }
     }
 
     private var resultSection: some View {
-        Section(header: Text("Indicateurs")) {
+        Section {
             if let project = viewModel.currentProject {
                 resultRow("Prix total", value: project.costs.total, suffix: "EUR")
                 resultRow("Rendement brut", value: project.result.grossYield, suffix: "%")
@@ -73,37 +136,65 @@ struct ProjectFormView: View {
                 resultRow("Rendement net-net", value: project.result.netNetYield, suffix: "%")
                 resultRow("Cashflow mensuel", value: project.result.monthlyCashflow, suffix: "EUR")
             } else {
-                Text("Aucun calcul effectue")
-                    .foregroundColor(.secondary)
+                ContentUnavailableView {
+                    Label("Aucun calcul", systemImage: "function")
+                }
             }
+        } header: {
+            Label("Indicateurs", systemImage: "percent")
         }
     }
 
-    private var actionSection: some View {
-        Section {
-            Button("Calculer") {
+    private var actionBar: some View {
+        HStack(spacing: 12) {
+            Button {
                 viewModel.calculate()
+            } label: {
+                Label("Calculer", systemImage: "function")
+                    .frame(maxWidth: .infinity)
             }
+            .buttonStyle(.borderedProminent)
 
-            Button("Sauvegarder") {
+            Button {
                 guard let project = viewModel.save() else { return }
                 onSave(project)
+            } label: {
+                Label("Sauvegarder", systemImage: "tray.and.arrow.down")
+                    .frame(maxWidth: .infinity)
             }
+            .buttonStyle(.bordered)
             .disabled(viewModel.currentProject == nil)
         }
+        .controlSize(.large)
+        .padding()
+        .background(.bar)
     }
 
-    private func decimalField(_ title: String, value: Binding<Double>) -> some View {
-        TextField(title, value: value, formatter: NumberFormatter.evalImmoDecimal)
-            .evalImmoDecimalKeyboard()
+    private func decimalField(
+        _ title: String,
+        detail: String,
+        value: Binding<Double>,
+        field: ProjectFormField
+    ) -> some View {
+        LabeledContent {
+            HStack(spacing: 6) {
+                TextField("0", value: value, formatter: NumberFormatter.evalImmoDecimal)
+                    .multilineTextAlignment(.trailing)
+                    .focused($focusedField, equals: field)
+                    .evalImmoDecimalKeyboard()
+
+                Text("EUR")
+                    .foregroundStyle(.secondary)
+            }
+        } label: {
+            LabeledFieldTitle(title: title, detail: detail)
+        }
     }
 
     private func resultRow(_ title: String, value: Double, suffix: String) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
+        LabeledContent(title) {
             Text("\(value, specifier: "%.2f") \(suffix)")
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -121,6 +212,31 @@ struct ProjectFormView: View {
 private struct ProjectFormError: Identifiable {
     let id = UUID()
     let value: String
+}
+
+private enum ProjectFormField: Hashable {
+    case purchasePrice
+    case notaryFees
+    case agencyCosts
+    case worksCost
+    case monthlyRent
+    case monthlyCondominiumFees
+    case monthlyPropertyTax
+    case monthlyPayment
+}
+
+private struct LabeledFieldTitle: View {
+    let title: String
+    let detail: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+            Text(detail)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+    }
 }
 
 private extension NumberFormatter {

@@ -7,6 +7,12 @@ import SwiftUI
 
 struct ProjectDetailView: View {
     let project: InvestmentProjectSnapshot
+    let onAddProject: () -> Void
+
+    init(project: InvestmentProjectSnapshot, onAddProject: @escaping () -> Void = {}) {
+        self.project = project
+        self.onAddProject = onAddProject
+    }
 
     var body: some View {
         List {
@@ -33,6 +39,13 @@ struct ProjectDetailView: View {
             }
         }
         .navigationTitle("Projet")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: onAddProject) {
+                    Label("Nouveau projet", systemImage: "plus")
+                }
+            }
+        }
     }
 
     private func valueRow(_ title: String, value: Double, suffix: String) -> some View {

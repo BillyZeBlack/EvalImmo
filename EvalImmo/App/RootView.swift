@@ -24,7 +24,10 @@ struct RootView: View {
                     }
                 case .projectDetail(let id):
                     if let project = projectStore.project(with: id) {
-                        ProjectDetailView(project: project)
+                        ProjectDetailView(
+                            project: project,
+                            onAddProject: appState.showNewProject
+                        )
                     } else {
                         ContentUnavailableView(
                             "Projet introuvable",

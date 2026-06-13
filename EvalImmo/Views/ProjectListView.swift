@@ -12,12 +12,10 @@ struct ProjectListView: View {
     var body: some View {
         List {
             if store.projects.isEmpty {
-                ContentUnavailableView(
-                    "Aucun projet",
-                    systemImage: "building.2",
-                    description: Text("Les projets sauvegardes apparaitront ici.")
-                )
+                EmptyProjectListView(onAddProject: onAddProject)
             } else {
+                ProjectPortfolioSummaryView(projects: store.projects)
+
                 ForEach(store.projects) { project in
                     NavigationLink(value: AppState.Route.projectDetail(project.id)) {
                         ProjectRowView(project: project)
@@ -33,6 +31,53 @@ struct ProjectListView: View {
                 }
             }
         }
+    }
+}
+
+private struct EmptyProjectListView: View {
+    let onAddProject: () -> Void
+
+    var body: some View {
+        ContentUnavailableView {
+            Label("Aucun projet", systemImage: "building.2")
+        } actions: {
+            Button("Nouveau projet", action: onAddProject)
+                .buttonStyle(.borderedProminent)
+        }
+    }
+}
+
+private struct ProjectPortfolioSummaryView: View {
+    let projects: [InvestmentProjectSnapshot]
+
+    var body: some View {
+        Section("Synthese") {
+            summaryRow("Projets sauvegardes", value: "\(projects.count)")
+            summaryRow("Investissement total", value: formatted(totalInvestment, fractionDigits: 0, suffix: "EUR"))
+            summaryRow("Cashflow mensuel total", value: formatted(monthlyCashflow, fractionDigits: 2, suffix: "EUR"))
+        }
+    }
+
+    private var totalInvestment: Double {
+        projects.reduce(0) { $0 + $1.costs.total }
+    }
+
+    private var monthlyCashflow: Double {
+        projects.reduce(0) { $0 + $1.result.monthlyCashflow }
+    }
+
+    private func summaryRow(_ title: String, value: String) -> some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text(value)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func formatted(_ value: Double, fractionDigits: Int, suffix: String) -> String {
+        let format = "%.\(fractionDigits)f %@"
+        return String(format: format, value, suffix)
     }
 }
 
@@ -56,6 +101,14 @@ private struct ProjectRowView: View {
                 Text("Rendement net-net")
                 Spacer()
                 Text("\(project.result.netNetYield, specifier: "%.2f") %")
+            }
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+
+            HStack {
+                Text("Cashflow mensuel")
+                Spacer()
+                Text("\(project.result.monthlyCashflow, specifier: "%.2f") EUR")
             }
             .font(.subheadline)
             .foregroundStyle(.secondary)
