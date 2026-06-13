@@ -156,10 +156,11 @@ struct ProjectFormView: View {
         Section {
             if let project = viewModel.currentProject {
                 resultRow("Prix total", value: project.costs.total, suffix: "EUR")
-                resultRow("Rendement brut", value: project.result.grossYield, suffix: "%")
-                resultRow("Rendement net", value: project.result.netYield, suffix: "%")
+                resultRow("Rendement brut", value: project.economicResult.grossYield, suffix: "%")
+                resultRow("Rendement net avant impots", value: project.economicResult.netYieldBeforeTax, suffix: "%")
+                resultRow("Cashflow avant impots", value: project.economicResult.monthlyCashflowBeforeTax, suffix: "EUR")
                 resultRow("Rendement net-net", value: project.result.netNetYield, suffix: "%")
-                resultRow("Cashflow mensuel", value: project.result.monthlyCashflow, suffix: "EUR")
+                resultRow("Cashflow apres impots", value: project.result.monthlyCashflow, suffix: "EUR")
             } else {
                 ContentUnavailableView {
                     Label("Aucun calcul", systemImage: "function")

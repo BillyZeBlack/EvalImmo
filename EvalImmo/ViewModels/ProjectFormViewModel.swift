@@ -59,6 +59,16 @@ final class ProjectFormViewModel: ObservableObject {
             agencyCosts: draft.agencyCosts,
             works: draft.worksCost
         )
+        let economicIndicators = try calculator.economicIndicators(
+            monthlyRent: draft.monthlyRent,
+            monthlyCondominiumFees: draft.monthlyCondominiumFees,
+            monthlyPayment: draft.monthlyPayment,
+            monthlyPropertyTax: draft.monthlyPropertyTax
+        )
+        let economicResult = try calculator.economicResult(
+            costs: costs,
+            indicators: economicIndicators
+        )
         let indicators = try calculator.indicators(
             monthlyRent: draft.monthlyRent,
             monthlyCondominiumFees: draft.monthlyCondominiumFees,
@@ -71,6 +81,8 @@ final class ProjectFormViewModel: ObservableObject {
         return InvestmentProjectSnapshot(
             draft: draft,
             costs: costs,
+            economicIndicators: economicIndicators,
+            economicResult: economicResult,
             indicators: indicators,
             result: result
         )

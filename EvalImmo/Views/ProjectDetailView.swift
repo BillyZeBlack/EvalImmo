@@ -30,10 +30,11 @@ struct ProjectDetailView: View {
             }
 
             Section("Indicateurs") {
-                valueRow("Rendement brut", value: project.result.grossYield, suffix: "%")
-                valueRow("Rendement net", value: project.result.netYield, suffix: "%")
+                valueRow("Rendement brut", value: project.economicResult.grossYield, suffix: "%")
+                valueRow("Rendement net avant impots", value: project.economicResult.netYieldBeforeTax, suffix: "%")
+                valueRow("Cashflow avant impots", value: project.economicResult.monthlyCashflowBeforeTax, suffix: "EUR")
                 valueRow("Rendement net-net", value: project.result.netNetYield, suffix: "%")
-                valueRow("Cashflow mensuel", value: project.result.monthlyCashflow, suffix: "EUR")
+                valueRow("Cashflow apres impots", value: project.result.monthlyCashflow, suffix: "EUR")
             }
 
             Section("Revenus et charges") {
@@ -79,6 +80,17 @@ struct ProjectDetailView_Previews: PreviewProvider {
                 project: InvestmentProjectSnapshot(
                     draft: InvestmentProjectDraft(),
                     costs: InvestmentCosts(price: 100_000, notaryFees: 8_000, agencyCosts: 5_000, works: 7_000),
+                    economicIndicators: InvestmentEconomicIndicators(
+                        annualRentalPrice: 9_600,
+                        annualCondominiumFees: 1_200,
+                        monthlyPayment: 500,
+                        annualPropertyTax: 600
+                    ),
+                    economicResult: InvestmentEconomicResult(
+                        grossYield: 8,
+                        netYieldBeforeTax: 6.5,
+                        monthlyCashflowBeforeTax: 150
+                    ),
                     indicators: InvestmentIndicators(
                         annualRentalPrice: 9_600,
                         annualCondominiumFees: 1_200,

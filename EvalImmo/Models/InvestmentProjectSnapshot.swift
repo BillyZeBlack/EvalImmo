@@ -10,6 +10,8 @@ struct InvestmentProjectSnapshot: Identifiable, Equatable {
     let createdAt: Date
     let draft: InvestmentProjectDraft
     let costs: InvestmentCosts
+    let economicIndicators: InvestmentEconomicIndicators
+    let economicResult: InvestmentEconomicResult
     let indicators: InvestmentIndicators
     let result: InvestmentYieldResult
 
@@ -18,6 +20,8 @@ struct InvestmentProjectSnapshot: Identifiable, Equatable {
         createdAt: Date = Date(),
         draft: InvestmentProjectDraft,
         costs: InvestmentCosts,
+        economicIndicators: InvestmentEconomicIndicators,
+        economicResult: InvestmentEconomicResult,
         indicators: InvestmentIndicators,
         result: InvestmentYieldResult
     ) {
@@ -25,6 +29,8 @@ struct InvestmentProjectSnapshot: Identifiable, Equatable {
         self.createdAt = createdAt
         self.draft = draft
         self.costs = costs
+        self.economicIndicators = economicIndicators
+        self.economicResult = economicResult
         self.indicators = indicators
         self.result = result
     }

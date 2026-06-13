@@ -35,12 +35,18 @@ struct InvestmentCalculator {
         monthlyPayment: Double,
         monthlyPropertyTax: Double
     ) throws -> InvestmentIndicators {
-        let indicators = InvestmentIndicators(
-            annualRentalPrice: monthlyRent * 12,
-            annualCondominiumFees: monthlyCondominiumFees * 12,
-            taxes: (monthlyRent * 6) * ((taxRate + 17.2) / 100),
+        let economicIndicators = try economicIndicators(
+            monthlyRent: monthlyRent,
+            monthlyCondominiumFees: monthlyCondominiumFees,
             monthlyPayment: monthlyPayment,
-            annualPropertyTax: monthlyPropertyTax * 12
+            monthlyPropertyTax: monthlyPropertyTax
+        )
+        let indicators = InvestmentIndicators(
+            annualRentalPrice: economicIndicators.annualRentalPrice,
+            annualCondominiumFees: economicIndicators.annualCondominiumFees,
+            taxes: (monthlyRent * 6) * ((taxRate + 17.2) / 100),
+            monthlyPayment: economicIndicators.monthlyPayment,
+            annualPropertyTax: economicIndicators.annualPropertyTax
         )
 
         try validate([
@@ -53,7 +59,32 @@ struct InvestmentCalculator {
         return indicators
     }
 
-    func yields(costs: InvestmentCosts, indicators: InvestmentIndicators) throws -> InvestmentYieldResult {
+    func economicIndicators(
+        monthlyRent: Double,
+        monthlyCondominiumFees: Double,
+        monthlyPayment: Double,
+        monthlyPropertyTax: Double
+    ) throws -> InvestmentEconomicIndicators {
+        let indicators = InvestmentEconomicIndicators(
+            annualRentalPrice: monthlyRent * 12,
+            annualCondominiumFees: monthlyCondominiumFees * 12,
+            monthlyPayment: monthlyPayment,
+            annualPropertyTax: monthlyPropertyTax * 12
+        )
+
+        try validate([
+            indicators.annualRentalPrice,
+            indicators.annualCondominiumFees,
+            indicators.monthlyPayment,
+            indicators.annualPropertyTax
+        ])
+        return indicators
+    }
+
+    func economicResult(
+        costs: InvestmentCosts,
+        indicators: InvestmentEconomicIndicators
+    ) throws -> InvestmentEconomicResult {
         let totalPrice = costs.total
 
         guard totalPrice > 0 else {
@@ -61,10 +92,36 @@ struct InvestmentCalculator {
         }
 
         let grossYield = (indicators.annualRentalPrice / totalPrice) * 100
-        let netYield = (
+        let netYieldBeforeTax = (
             (indicators.annualRentalPrice - (indicators.annualCondominiumFees + indicators.annualPropertyTax))
             / totalPrice
         ) * 100
+        let monthlyCashflowBeforeTax = (indicators.annualRentalPrice / 12)
+            - (
+                (indicators.annualCondominiumFees / 12)
+                + (indicators.annualPropertyTax / 12)
+                + indicators.monthlyPayment
+            )
+
+        let result = InvestmentEconomicResult(
+            grossYield: grossYield,
+            netYieldBeforeTax: netYieldBeforeTax,
+            monthlyCashflowBeforeTax: monthlyCashflowBeforeTax
+        )
+
+        try validate([result.grossYield, result.netYieldBeforeTax, result.monthlyCashflowBeforeTax])
+        return result
+    }
+
+    func yields(costs: InvestmentCosts, indicators: InvestmentIndicators) throws -> InvestmentYieldResult {
+        let economicIndicators = InvestmentEconomicIndicators(
+            annualRentalPrice: indicators.annualRentalPrice,
+            annualCondominiumFees: indicators.annualCondominiumFees,
+            monthlyPayment: indicators.monthlyPayment,
+            annualPropertyTax: indicators.annualPropertyTax
+        )
+        let economicResult = try economicResult(costs: costs, indicators: economicIndicators)
+        let totalPrice = costs.total
         let netNetYield = (
             (indicators.annualRentalPrice - (
                 indicators.annualCondominiumFees
@@ -83,8 +140,8 @@ struct InvestmentCalculator {
             )
 
         let result = InvestmentYieldResult(
-            grossYield: grossYield,
-            netYield: netYield,
+            grossYield: economicResult.grossYield,
+            netYield: economicResult.netYieldBeforeTax,
             netNetYield: netNetYield,
             monthlyCashflow: monthlyCashflow
         )
