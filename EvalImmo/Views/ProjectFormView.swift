@@ -20,6 +20,7 @@ struct ProjectFormView: View {
 
     var body: some View {
         Form {
+            projectTypeSection
             acquisitionSection
             rentalSection
             financingSection
@@ -44,6 +45,30 @@ struct ProjectFormView: View {
                 message: Text(message.value),
                 dismissButton: .default(Text("OK"))
             )
+        }
+    }
+
+    private var projectTypeSection: some View {
+        Section {
+            Picker("Type de location", selection: rentalTypeBinding) {
+                ForEach(RentalType.allCases) { rentalType in
+                    Text(rentalType.title).tag(rentalType)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            Picker(selection: taxRegimeBinding) {
+                ForEach(viewModel.draft.rentalType.availableTaxRegimes) { taxRegime in
+                    Text(taxRegime.title).tag(taxRegime)
+                }
+            } label: {
+                LabeledFieldTitle(
+                    title: "Regime fiscal",
+                    detail: "Option associee au type de location."
+                )
+            }
+        } header: {
+            Label("Projet", systemImage: "building.2")
         }
     }
 
@@ -205,6 +230,30 @@ struct ProjectFormView: View {
                 return ProjectFormError(value: message)
             },
             set: { _ in viewModel.errorMessage = nil }
+        )
+    }
+
+    private var rentalTypeBinding: Binding<RentalType> {
+        Binding(
+            get: { viewModel.draft.rentalType },
+            set: { rentalType in
+                viewModel.draft.rentalType = rentalType
+                viewModel.draft.taxRegime = rentalType.defaultTaxRegime
+            }
+        )
+    }
+
+    private var taxRegimeBinding: Binding<TaxRegime> {
+        Binding(
+            get: {
+                let taxRegime = viewModel.draft.taxRegime
+                return taxRegime.rentalType == viewModel.draft.rentalType
+                    ? taxRegime
+                    : viewModel.draft.rentalType.defaultTaxRegime
+            },
+            set: { taxRegime in
+                viewModel.draft.taxRegime = taxRegime
+            }
         )
     }
 }

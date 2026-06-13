@@ -89,6 +89,10 @@ private struct ProjectRowView: View {
             Text(projectTitle)
                 .font(.headline)
 
+            Text("\(project.draft.rentalType.title) - \(project.draft.taxRegime.title)")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
             HStack {
                 Text("Prix total")
                 Spacer()

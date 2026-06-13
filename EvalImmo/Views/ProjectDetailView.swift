@@ -16,6 +16,11 @@ struct ProjectDetailView: View {
 
     var body: some View {
         List {
+            Section("Projet") {
+                textRow("Type de location", value: project.draft.rentalType.title)
+                textRow("Regime fiscal", value: project.draft.taxRegime.title)
+            }
+
             Section("Acquisition") {
                 valueRow("Prix du bien", value: project.costs.price, suffix: "EUR")
                 valueRow("Frais de notaire", value: project.costs.notaryFees, suffix: "EUR")
@@ -53,6 +58,15 @@ struct ProjectDetailView: View {
             Text(title)
             Spacer()
             Text("\(value, specifier: "%.2f") \(suffix)")
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func textRow(_ title: String, value: String) -> some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text(value)
                 .foregroundStyle(.secondary)
         }
     }

@@ -11,6 +11,7 @@
 		9F371AE5263AA67300FF5835 /* InvestmentCosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE4263AA67300FF5835 /* InvestmentCosts.swift */; };
 		9F371AE7263AA67300FF5835 /* InvestmentIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE6263AA67300FF5835 /* InvestmentIndicators.swift */; };
 		9F371AE9263AA67300FF5835 /* InvestmentYieldResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE8263AA67300FF5835 /* InvestmentYieldResult.swift */; };
+		9F371AEB263AA67300FF5835 /* RentalConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AEA263AA67300FF5835 /* RentalConfiguration.swift */; };
 		9F371AC1263AA67300FF5835 /* InvestmentProjectDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */; };
 		9F371AC2263AA67300FF5835 /* InvestmentProjectSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */; };
 		9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */; };
@@ -50,6 +51,7 @@
 		9F371AE4263AA67300FF5835 /* InvestmentCosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentCosts.swift; sourceTree = "<group>"; };
 		9F371AE6263AA67300FF5835 /* InvestmentIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentIndicators.swift; sourceTree = "<group>"; };
 		9F371AE8263AA67300FF5835 /* InvestmentYieldResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentYieldResult.swift; sourceTree = "<group>"; };
+		9F371AEA263AA67300FF5835 /* RentalConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentalConfiguration.swift; sourceTree = "<group>"; };
 		9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentProjectDraft.swift; sourceTree = "<group>"; };
 		9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentProjectSnapshot.swift; sourceTree = "<group>"; };
 		9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormViewModel.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			children = (
 				9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */,
 				9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */,
+				9F371AEA263AA67300FF5835 /* RentalConfiguration.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				9F371AD5263AA67300FF5835 /* RootView.swift in Sources */,
 				9F371AE2263AA67300FF5835 /* ProjectListView.swift in Sources */,
 				9F371AE9263AA67300FF5835 /* InvestmentYieldResult.swift in Sources */,
+				9F371AEB263AA67300FF5835 /* RentalConfiguration.swift in Sources */,
 				9F371AC2263AA67300FF5835 /* InvestmentProjectSnapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -6,6 +6,8 @@
 import Foundation
 
 struct InvestmentProjectDraft: Equatable {
+    var rentalType: RentalType = .furnished
+    var taxRegime: TaxRegime = .microBIC
     var purchasePrice: Double = 0
     var notaryFees: Double = 0
     var agencyCosts: Double = 0
