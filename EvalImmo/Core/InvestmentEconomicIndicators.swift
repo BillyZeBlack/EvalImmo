@@ -10,4 +10,5 @@ struct InvestmentEconomicIndicators: Equatable {
     let annualCondominiumFees: Double
     let monthlyPayment: Double
     let annualPropertyTax: Double
+    let annualOwnerInsurance: Double
 }

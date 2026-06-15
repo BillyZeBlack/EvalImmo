@@ -105,6 +105,7 @@ final class ProjectFormViewModel: ObservableObject {
     }
 
     private func makeProjectSnapshot() throws -> InvestmentProjectSnapshot {
+        let monthlyPropertyTax = draft.annualPropertyTax / 12
         let costs = try calculator.costs(
             price: draft.purchasePrice,
             notaryFees: draft.notaryFees,
@@ -113,9 +114,11 @@ final class ProjectFormViewModel: ObservableObject {
         )
         let economicIndicators = try calculator.economicIndicators(
             monthlyRent: draft.monthlyRent,
+            vacancyRate: draft.vacancyRate,
             monthlyCondominiumFees: draft.monthlyCondominiumFees,
             monthlyPayment: draft.monthlyPayment,
-            monthlyPropertyTax: draft.monthlyPropertyTax
+            monthlyPropertyTax: monthlyPropertyTax,
+            annualOwnerInsurance: draft.annualOwnerInsurance
         )
         let economicResult = try calculator.economicResult(
             costs: costs,
@@ -125,10 +128,12 @@ final class ProjectFormViewModel: ObservableObject {
             rentalType: draft.rentalType,
             taxRegime: draft.taxRegime,
             monthlyRent: draft.monthlyRent,
+            vacancyRate: draft.vacancyRate,
             monthlyCondominiumFees: draft.monthlyCondominiumFees,
             taxRate: draft.taxRate,
             monthlyPayment: draft.monthlyPayment,
-            monthlyPropertyTax: draft.monthlyPropertyTax,
+            monthlyPropertyTax: monthlyPropertyTax,
+            annualOwnerInsurance: draft.annualOwnerInsurance,
             costs: costs
         )
         let result = try calculator.yields(costs: costs, indicators: indicators)

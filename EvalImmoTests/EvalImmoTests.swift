@@ -23,7 +23,7 @@ class EvalImmoTests: XCTestCase {
                 worksCost: 0,
                 monthlyRent: 1_000,
                 monthlyCondominiumFees: 120,
-                monthlyPropertyTax: 100,
+                annualPropertyTax: 1_200,
                 monthlyPayment: 900,
                 taxRate: 11
             )
@@ -56,7 +56,7 @@ class EvalImmoTests: XCTestCase {
                 worksCost: 8_000,
                 monthlyRent: 850,
                 monthlyCondominiumFees: 90,
-                monthlyPropertyTax: 70,
+                annualPropertyTax: 840,
                 monthlyPayment: 650,
                 taxRate: 30
             )
@@ -110,7 +110,7 @@ class EvalImmoTests: XCTestCase {
                 notaryFees: 12_000,
                 monthlyRent: 850,
                 monthlyCondominiumFees: 90,
-                monthlyPropertyTax: 70,
+                annualPropertyTax: 840,
                 monthlyPayment: 650,
                 taxRate: 30
             )
@@ -147,6 +147,29 @@ class EvalImmoTests: XCTestCase {
         XCTAssertEqual(result.grossYield, 8, accuracy: 0.0001)
         XCTAssertEqual(result.netYieldBeforeTax, 6.5, accuracy: 0.0001)
         XCTAssertEqual(result.monthlyCashflowBeforeTax, 150, accuracy: 0.0001)
+    }
+
+    func testInvestmentCalculatorAppliesVacancyAndOwnerInsuranceToEconomicResult() throws {
+        let costs = try calculator.costs(
+            price: 200_000,
+            notaryFees: 0
+        )
+        let indicators = try calculator.economicIndicators(
+            monthlyRent: 1_000,
+            vacancyRate: 5,
+            monthlyCondominiumFees: 100,
+            monthlyPayment: 500,
+            monthlyPropertyTax: 50,
+            annualOwnerInsurance: 240
+        )
+
+        let result = try calculator.economicResult(costs: costs, indicators: indicators)
+
+        XCTAssertEqual(indicators.annualRentalPrice, 11_400, accuracy: 0.0001)
+        XCTAssertEqual(indicators.annualOwnerInsurance, 240, accuracy: 0.0001)
+        XCTAssertEqual(result.grossYield, 5.7, accuracy: 0.0001)
+        XCTAssertEqual(result.netYieldBeforeTax, 4.68, accuracy: 0.0001)
+        XCTAssertEqual(result.monthlyCashflowBeforeTax, 280, accuracy: 0.0001)
     }
 
     func testInvestmentCalculatorPreservesCurrentIndicatorRules() throws {
@@ -210,6 +233,23 @@ class EvalImmoTests: XCTestCase {
         XCTAssertEqual(indicators.taxes, 2_639.52, accuracy: 0.0001)
     }
 
+    func testInvestmentCalculatorDeductsOwnerInsuranceAndVacancyInBareRealFoncierTaxes() throws {
+        let indicators = try calculator.indicators(
+            rentalType: .bare,
+            taxRegime: .realFoncier,
+            monthlyRent: 1_000,
+            vacancyRate: 5,
+            monthlyCondominiumFees: 120,
+            taxRate: 11,
+            monthlyPayment: 900,
+            monthlyPropertyTax: 100,
+            annualOwnerInsurance: 240
+        )
+
+        XCTAssertEqual(indicators.annualRentalPrice, 11_400)
+        XCTAssertEqual(indicators.taxes, 2_402.64, accuracy: 0.0001)
+    }
+
     func testInvestmentCalculatorComputesSimplifiedLMNPRealTaxes() throws {
         let costs = try calculator.costs(
             price: 150_000,
@@ -230,6 +270,20 @@ class EvalImmoTests: XCTestCase {
 
         XCTAssertEqual(indicators.annualRentalPrice, 10_200)
         XCTAssertEqual(indicators.taxes, 1_154.8267, accuracy: 0.0001)
+    }
+
+    func testInvestmentCalculatorRejectsInvalidVacancyRate() throws {
+        XCTAssertThrowsError(
+            try calculator.economicIndicators(
+                monthlyRent: 1_000,
+                vacancyRate: 120,
+                monthlyCondominiumFees: 100,
+                monthlyPayment: 500,
+                monthlyPropertyTax: 50
+            )
+        ) { error in
+            XCTAssertEqual(error as? InvestmentCalculationError, .invalidInput)
+        }
     }
 
     func testInvestmentCalculatorAppliesFurnishedMicroBICMinimumAllowance() throws {
@@ -342,7 +396,7 @@ class EvalImmoTests: XCTestCase {
                 worksCost: 7_000,
                 monthlyRent: 800,
                 monthlyCondominiumFees: 100,
-                monthlyPropertyTax: 50,
+                annualPropertyTax: 600,
                 monthlyPayment: 500,
                 taxRate: 30
             )

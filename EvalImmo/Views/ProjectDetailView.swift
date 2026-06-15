@@ -58,6 +58,10 @@ struct InvestmentResultsDetailView: View {
         project.economicIndicators.annualPropertyTax / 12
     }
 
+    private var monthlyOwnerInsurance: Double {
+        project.economicIndicators.annualOwnerInsurance / 12
+    }
+
     private var monthlyTaxes: Double {
         project.indicators.taxes / 12
     }
@@ -90,6 +94,8 @@ struct InvestmentResultsDetailView: View {
             resultRow("Charges annuelles", value: project.economicIndicators.annualCondominiumFees, format: .currency)
             resultRow("Taxe fonciere mensuelle", value: monthlyPropertyTax, format: .currency)
             resultRow("Taxe fonciere annuelle", value: project.economicIndicators.annualPropertyTax, format: .currency)
+            resultRow("Assurance PNO mensuelle", value: monthlyOwnerInsurance, format: .currency)
+            resultRow("Assurance PNO annuelle", value: project.economicIndicators.annualOwnerInsurance, format: .currency)
             resultRow("Mensualite de credit", value: project.economicIndicators.monthlyPayment, format: .currency)
         } header: {
             Label("Revenus et charges", systemImage: "list.bullet.rectangle")
@@ -108,6 +114,7 @@ struct InvestmentResultsDetailView: View {
             resultRow("Loyer mensuel", value: monthlyRent, format: .signedCurrency)
             resultRow("Charges", value: -monthlyCondominiumFees, format: .signedCurrency)
             resultRow("Taxe fonciere", value: -monthlyPropertyTax, format: .signedCurrency)
+            resultRow("Assurance PNO", value: -monthlyOwnerInsurance, format: .signedCurrency)
             resultRow("Mensualite de credit", value: -project.economicIndicators.monthlyPayment, format: .signedCurrency)
             resultRow("Cashflow avant impots", value: project.economicResult.monthlyCashflowBeforeTax, format: .signedCurrency)
             resultRow("Imposition", value: -monthlyTaxes, format: .signedCurrency)
@@ -162,7 +169,8 @@ struct ProjectDetailView_Previews: PreviewProvider {
                         annualRentalPrice: 9_600,
                         annualCondominiumFees: 1_200,
                         monthlyPayment: 500,
-                        annualPropertyTax: 600
+                        annualPropertyTax: 600,
+                        annualOwnerInsurance: 180
                     ),
                     economicResult: InvestmentEconomicResult(
                         grossYield: 8,
@@ -174,7 +182,8 @@ struct ProjectDetailView_Previews: PreviewProvider {
                         annualCondominiumFees: 1_200,
                         taxes: 2_265.6,
                         monthlyPayment: 500,
-                        annualPropertyTax: 600
+                        annualPropertyTax: 600,
+                        annualOwnerInsurance: 180
                     ),
                     result: InvestmentYieldResult(
                         grossYield: 8,

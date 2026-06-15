@@ -112,6 +112,13 @@ struct ProjectFormView: View {
                 field: .monthlyRent
             )
             decimalField(
+                "Vacance locative",
+                detail: "Part annuelle estimee sans loyer.",
+                value: $viewModel.draft.vacancyRate,
+                field: .vacancyRate,
+                suffix: "%"
+            )
+            decimalField(
                 "Charges de copropriete",
                 detail: "Montant mensuel.",
                 value: $viewModel.draft.monthlyCondominiumFees,
@@ -119,9 +126,17 @@ struct ProjectFormView: View {
             )
             decimalField(
                 "Taxe fonciere",
-                detail: "Equivalent mensuel.",
-                value: $viewModel.draft.monthlyPropertyTax,
-                field: .monthlyPropertyTax
+                detail: "Montant annuel connu ou estime.",
+                value: $viewModel.draft.annualPropertyTax,
+                field: .annualPropertyTax,
+                suffix: "EUR/an"
+            )
+            decimalField(
+                "Assurance PNO",
+                detail: "Montant annuel estime.",
+                value: $viewModel.draft.annualOwnerInsurance,
+                field: .annualOwnerInsurance,
+                suffix: "EUR/an"
             )
 
             Picker(selection: $viewModel.draft.taxRate) {
@@ -198,7 +213,8 @@ struct ProjectFormView: View {
         _ title: String,
         detail: String,
         value: Binding<Double>,
-        field: ProjectFormField
+        field: ProjectFormField,
+        suffix: String = "EUR"
     ) -> some View {
         LabeledContent {
             HStack(spacing: 6) {
@@ -207,7 +223,7 @@ struct ProjectFormView: View {
                     .focused($focusedField, equals: field)
                     .evalImmoDecimalKeyboard()
 
-                Text("EUR")
+                Text(suffix)
                     .foregroundStyle(.secondary)
             }
         } label: {
@@ -287,8 +303,10 @@ private enum ProjectFormField: Hashable {
     case agencyCosts
     case worksCost
     case monthlyRent
+    case vacancyRate
     case monthlyCondominiumFees
-    case monthlyPropertyTax
+    case annualPropertyTax
+    case annualOwnerInsurance
     case monthlyPayment
 }
 

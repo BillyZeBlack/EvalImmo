@@ -11,4 +11,5 @@ struct InvestmentIndicators: Equatable {
     let taxes: Double
     let monthlyPayment: Double
     let annualPropertyTax: Double
+    let annualOwnerInsurance: Double
 }

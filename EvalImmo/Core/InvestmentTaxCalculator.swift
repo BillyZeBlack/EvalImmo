@@ -20,6 +20,7 @@ struct InvestmentTaxCalculator {
         annualRentalPrice: Double,
         annualCondominiumFees: Double,
         annualPropertyTax: Double,
+        annualOwnerInsurance: Double,
         monthlyRent: Double,
         taxRate: Double,
         costs: InvestmentCosts?
@@ -35,6 +36,7 @@ struct InvestmentTaxCalculator {
                 annualRentalPrice: annualRentalPrice,
                 annualCondominiumFees: annualCondominiumFees,
                 annualPropertyTax: annualPropertyTax,
+                annualOwnerInsurance: annualOwnerInsurance,
                 taxRate: taxRate
             )
         case (.furnished, .microBIC):
@@ -47,6 +49,7 @@ struct InvestmentTaxCalculator {
                 annualRentalPrice: annualRentalPrice,
                 annualCondominiumFees: annualCondominiumFees,
                 annualPropertyTax: annualPropertyTax,
+                annualOwnerInsurance: annualOwnerInsurance,
                 taxRate: taxRate,
                 costs: costs
             )
@@ -71,10 +74,11 @@ struct InvestmentTaxCalculator {
         annualRentalPrice: Double,
         annualCondominiumFees: Double,
         annualPropertyTax: Double,
+        annualOwnerInsurance: Double,
         taxRate: Double
     ) -> Double {
         let taxableIncome = max(
-            annualRentalPrice - annualCondominiumFees - annualPropertyTax,
+            annualRentalPrice - annualCondominiumFees - annualPropertyTax - annualOwnerInsurance,
             0
         )
         return taxableIncome * ((taxRate + socialContributionsRate) / 100)
@@ -100,12 +104,17 @@ struct InvestmentTaxCalculator {
         annualRentalPrice: Double,
         annualCondominiumFees: Double,
         annualPropertyTax: Double,
+        annualOwnerInsurance: Double,
         taxRate: Double,
         costs: InvestmentCosts?
     ) -> Double {
         let annualAmortization = (costs?.total ?? 0) / simplifiedLMNPAmortizationDuration
         let taxableIncome = max(
-            annualRentalPrice - annualCondominiumFees - annualPropertyTax - annualAmortization,
+            annualRentalPrice
+                - annualCondominiumFees
+                - annualPropertyTax
+                - annualOwnerInsurance
+                - annualAmortization,
             0
         )
         return taxableIncome * ((taxRate + socialContributionsRate) / 100)
