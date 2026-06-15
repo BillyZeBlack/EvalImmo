@@ -38,7 +38,8 @@ struct InvestmentCalculator {
         monthlyCondominiumFees: Double,
         taxRate: Double,
         monthlyPayment: Double,
-        monthlyPropertyTax: Double
+        monthlyPropertyTax: Double,
+        costs: InvestmentCosts? = nil
     ) throws -> InvestmentIndicators {
         let economicIndicators = try economicIndicators(
             monthlyRent: monthlyRent,
@@ -53,8 +54,11 @@ struct InvestmentCalculator {
                 rentalType: rentalType,
                 taxRegime: taxRegime,
                 annualRentalPrice: economicIndicators.annualRentalPrice,
+                annualCondominiumFees: economicIndicators.annualCondominiumFees,
+                annualPropertyTax: economicIndicators.annualPropertyTax,
                 monthlyRent: monthlyRent,
-                taxRate: taxRate
+                taxRate: taxRate,
+                costs: costs
             ),
             monthlyPayment: economicIndicators.monthlyPayment,
             annualPropertyTax: economicIndicators.annualPropertyTax

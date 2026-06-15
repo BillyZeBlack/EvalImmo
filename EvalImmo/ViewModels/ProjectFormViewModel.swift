@@ -33,8 +33,10 @@ final class ProjectFormViewModel: ObservableObject {
             return "Abattement forfaitaire de 30% sur les revenus locatifs."
         case .microBIC:
             return "Abattement forfaitaire de 50% sur les recettes meublees."
-        case .realFoncier, .lmnpReal:
-            return "Ce regime sera ajoute dans une prochaine etape."
+        case .realFoncier:
+            return "Charges de copropriete et taxe fonciere deduites des loyers."
+        case .lmnpReal:
+            return "Charges deduites avec amortissement simplifie sur 30 ans."
         }
     }
 
@@ -126,7 +128,8 @@ final class ProjectFormViewModel: ObservableObject {
             monthlyCondominiumFees: draft.monthlyCondominiumFees,
             taxRate: draft.taxRate,
             monthlyPayment: draft.monthlyPayment,
-            monthlyPropertyTax: draft.monthlyPropertyTax
+            monthlyPropertyTax: draft.monthlyPropertyTax,
+            costs: costs
         )
         let result = try calculator.yields(costs: costs, indicators: indicators)
 

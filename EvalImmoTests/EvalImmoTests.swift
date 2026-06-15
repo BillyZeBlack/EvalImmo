@@ -82,20 +82,20 @@ class EvalImmoTests: XCTestCase {
         let viewModel = ProjectFormViewModel()
 
         XCTAssertEqual(viewModel.draft.rentalType, .furnished)
-        XCTAssertEqual(viewModel.availableTaxRegimes, [.microBIC])
+        XCTAssertEqual(viewModel.availableTaxRegimes, [.microBIC, .lmnpReal])
 
         viewModel.selectRentalType(.bare)
 
         XCTAssertEqual(viewModel.draft.rentalType, .bare)
         XCTAssertEqual(viewModel.draft.taxRegime, .microFoncier)
-        XCTAssertEqual(viewModel.availableTaxRegimes, [.microFoncier])
+        XCTAssertEqual(viewModel.availableTaxRegimes, [.microFoncier, .realFoncier])
     }
 
     @MainActor
     func testProjectFormViewModelIgnoresUnsupportedTaxRegimeSelection() {
         let viewModel = ProjectFormViewModel()
 
-        viewModel.selectTaxRegime(.lmnpReal)
+        viewModel.selectTaxRegime(.realFoncier)
 
         XCTAssertEqual(viewModel.draft.taxRegime, .microBIC)
     }
@@ -193,6 +193,43 @@ class EvalImmoTests: XCTestCase {
 
         XCTAssertEqual(indicators.annualRentalPrice, 9_600)
         XCTAssertEqual(indicators.taxes, 2_265.6, accuracy: 0.0001)
+    }
+
+    func testInvestmentCalculatorComputesBareRealFoncierTaxes() throws {
+        let indicators = try calculator.indicators(
+            rentalType: .bare,
+            taxRegime: .realFoncier,
+            monthlyRent: 1_000,
+            monthlyCondominiumFees: 120,
+            taxRate: 11,
+            monthlyPayment: 900,
+            monthlyPropertyTax: 100
+        )
+
+        XCTAssertEqual(indicators.annualRentalPrice, 12_000)
+        XCTAssertEqual(indicators.taxes, 2_639.52, accuracy: 0.0001)
+    }
+
+    func testInvestmentCalculatorComputesSimplifiedLMNPRealTaxes() throws {
+        let costs = try calculator.costs(
+            price: 150_000,
+            notaryFees: 12_000,
+            agencyCosts: 5_000,
+            works: 8_000
+        )
+        let indicators = try calculator.indicators(
+            rentalType: .furnished,
+            taxRegime: .lmnpReal,
+            monthlyRent: 850,
+            monthlyCondominiumFees: 90,
+            taxRate: 30,
+            monthlyPayment: 650,
+            monthlyPropertyTax: 70,
+            costs: costs
+        )
+
+        XCTAssertEqual(indicators.annualRentalPrice, 10_200)
+        XCTAssertEqual(indicators.taxes, 1_154.8267, accuracy: 0.0001)
     }
 
     func testInvestmentCalculatorAppliesFurnishedMicroBICMinimumAllowance() throws {

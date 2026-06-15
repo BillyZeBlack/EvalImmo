@@ -69,9 +69,9 @@ extension RentalType {
     var supportedTaxRegimes: [TaxRegime] {
         switch self {
         case .bare:
-            return [.microFoncier]
+            return [.microFoncier, .realFoncier]
         case .furnished:
-            return [.microBIC]
+            return [.microBIC, .lmnpReal]
         }
     }
 }
