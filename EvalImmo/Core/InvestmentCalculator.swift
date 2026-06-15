@@ -8,9 +8,12 @@ import Foundation
 enum InvestmentCalculationError: Error, Equatable {
     case invalidTotalPrice
     case invalidInput
+    case ineligibleTaxRegime
 }
 
 struct InvestmentCalculator {
+    private let taxCalculator = InvestmentTaxCalculator()
+
     func costs(
         price: Double,
         notaryFees: Double,
@@ -29,6 +32,8 @@ struct InvestmentCalculator {
     }
 
     func indicators(
+        rentalType: RentalType = .furnished,
+        taxRegime: TaxRegime = .microBIC,
         monthlyRent: Double,
         monthlyCondominiumFees: Double,
         taxRate: Double,
@@ -44,7 +49,13 @@ struct InvestmentCalculator {
         let indicators = InvestmentIndicators(
             annualRentalPrice: economicIndicators.annualRentalPrice,
             annualCondominiumFees: economicIndicators.annualCondominiumFees,
-            taxes: (monthlyRent * 6) * ((taxRate + 17.2) / 100),
+            taxes: try taxCalculator.taxes(
+                rentalType: rentalType,
+                taxRegime: taxRegime,
+                annualRentalPrice: economicIndicators.annualRentalPrice,
+                monthlyRent: monthlyRent,
+                taxRate: taxRate
+            ),
             monthlyPayment: economicIndicators.monthlyPayment,
             annualPropertyTax: economicIndicators.annualPropertyTax
         )

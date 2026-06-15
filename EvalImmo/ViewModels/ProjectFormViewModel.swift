@@ -30,6 +30,9 @@ final class ProjectFormViewModel: ObservableObject {
         } catch InvestmentCalculationError.invalidTotalPrice {
             currentProject = nil
             errorMessage = "Le prix total doit etre superieur a zero."
+        } catch InvestmentCalculationError.ineligibleTaxRegime {
+            currentProject = nil
+            errorMessage = "Le micro-foncier est reserve aux revenus fonciers annuels inferieurs ou egaux a 15 000 EUR."
         } catch {
             currentProject = nil
             errorMessage = "Impossible de calculer les indicateurs."
@@ -45,6 +48,8 @@ final class ProjectFormViewModel: ObservableObject {
             return project
         } catch InvestmentCalculationError.invalidTotalPrice {
             errorMessage = "Le projet doit etre calcule avec un prix total valide."
+        } catch InvestmentCalculationError.ineligibleTaxRegime {
+            errorMessage = "Le micro-foncier est reserve aux revenus fonciers annuels inferieurs ou egaux a 15 000 EUR."
         } catch {
             errorMessage = "Impossible de sauvegarder le projet."
         }
@@ -70,6 +75,8 @@ final class ProjectFormViewModel: ObservableObject {
             indicators: economicIndicators
         )
         let indicators = try calculator.indicators(
+            rentalType: draft.rentalType,
+            taxRegime: draft.taxRegime,
             monthlyRent: draft.monthlyRent,
             monthlyCondominiumFees: draft.monthlyCondominiumFees,
             taxRate: draft.taxRate,

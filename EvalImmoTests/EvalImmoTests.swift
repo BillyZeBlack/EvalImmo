@@ -51,6 +51,37 @@ class EvalImmoTests: XCTestCase {
         XCTAssertEqual(indicators.annualPropertyTax, 600)
     }
 
+    func testInvestmentCalculatorComputesBareMicroFoncierTaxes() throws {
+        let indicators = try calculator.indicators(
+            rentalType: .bare,
+            taxRegime: .microFoncier,
+            monthlyRent: 800,
+            monthlyCondominiumFees: 100,
+            taxRate: 30,
+            monthlyPayment: 500,
+            monthlyPropertyTax: 50
+        )
+
+        XCTAssertEqual(indicators.annualRentalPrice, 9_600)
+        XCTAssertEqual(indicators.taxes, 3_171.84, accuracy: 0.0001)
+    }
+
+    func testInvestmentCalculatorRejectsBareMicroFoncierAboveAnnualRevenueLimit() throws {
+        XCTAssertThrowsError(
+            try calculator.indicators(
+                rentalType: .bare,
+                taxRegime: .microFoncier,
+                monthlyRent: 1_300,
+                monthlyCondominiumFees: 100,
+                taxRate: 30,
+                monthlyPayment: 500,
+                monthlyPropertyTax: 50
+            )
+        ) { error in
+            XCTAssertEqual(error as? InvestmentCalculationError, .ineligibleTaxRegime)
+        }
+    }
+
     func testInvestmentCalculatorPreservesCurrentYieldRules() throws {
         let costs = try calculator.costs(
             price: 100_000,
@@ -106,6 +137,8 @@ class EvalImmoTests: XCTestCase {
     func testProjectFormViewModelCalculatesCurrentProject() {
         let viewModel = ProjectFormViewModel(
             draft: InvestmentProjectDraft(
+                rentalType: .bare,
+                taxRegime: .microFoncier,
                 purchasePrice: 100_000,
                 notaryFees: 8_000,
                 agencyCosts: 5_000,
@@ -123,6 +156,7 @@ class EvalImmoTests: XCTestCase {
         XCTAssertNil(viewModel.errorMessage)
         XCTAssertEqual(viewModel.currentProject?.costs.total, 120_000)
         XCTAssertEqual(viewModel.currentProject?.economicResult.monthlyCashflowBeforeTax ?? 0, 150, accuracy: 0.0001)
+        XCTAssertEqual(viewModel.currentProject?.indicators.taxes ?? 0, 3_171.84, accuracy: 0.0001)
         XCTAssertEqual(viewModel.currentProject?.result.grossYield ?? 0, 8, accuracy: 0.0001)
     }
 }

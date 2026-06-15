@@ -14,6 +14,7 @@
 		9F371AEB263AA67300FF5835 /* RentalConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AEA263AA67300FF5835 /* RentalConfiguration.swift */; };
 		9F371AED263AA67300FF5835 /* InvestmentEconomicIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AEC263AA67300FF5835 /* InvestmentEconomicIndicators.swift */; };
 		9F371AEF263AA67300FF5835 /* InvestmentEconomicResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AEE263AA67300FF5835 /* InvestmentEconomicResult.swift */; };
+		9F371AF1263AA67300FF5835 /* InvestmentTaxCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF0263AA67300FF5835 /* InvestmentTaxCalculator.swift */; };
 		9F371AC1263AA67300FF5835 /* InvestmentProjectDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */; };
 		9F371AC2263AA67300FF5835 /* InvestmentProjectSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */; };
 		9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */; };
@@ -56,6 +57,7 @@
 		9F371AEA263AA67300FF5835 /* RentalConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentalConfiguration.swift; sourceTree = "<group>"; };
 		9F371AEC263AA67300FF5835 /* InvestmentEconomicIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentEconomicIndicators.swift; sourceTree = "<group>"; };
 		9F371AEE263AA67300FF5835 /* InvestmentEconomicResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentEconomicResult.swift; sourceTree = "<group>"; };
+		9F371AF0263AA67300FF5835 /* InvestmentTaxCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentTaxCalculator.swift; sourceTree = "<group>"; };
 		9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentProjectDraft.swift; sourceTree = "<group>"; };
 		9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentProjectSnapshot.swift; sourceTree = "<group>"; };
 		9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormViewModel.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				9F371AEC263AA67300FF5835 /* InvestmentEconomicIndicators.swift */,
 				9F371AEE263AA67300FF5835 /* InvestmentEconomicResult.swift */,
 				9F371AE6263AA67300FF5835 /* InvestmentIndicators.swift */,
+				9F371AF0263AA67300FF5835 /* InvestmentTaxCalculator.swift */,
 				9F371AE8263AA67300FF5835 /* InvestmentYieldResult.swift */,
 			);
 			path = Core;
@@ -372,6 +375,7 @@
 				9F371AE9263AA67300FF5835 /* InvestmentYieldResult.swift in Sources */,
 				9F371AEB263AA67300FF5835 /* RentalConfiguration.swift in Sources */,
 				9F371AEF263AA67300FF5835 /* InvestmentEconomicResult.swift in Sources */,
+				9F371AF1263AA67300FF5835 /* InvestmentTaxCalculator.swift in Sources */,
 				9F371AC2263AA67300FF5835 /* InvestmentProjectSnapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
