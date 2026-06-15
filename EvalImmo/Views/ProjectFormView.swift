@@ -155,12 +155,10 @@ struct ProjectFormView: View {
     private var resultSection: some View {
         Section {
             if let project = viewModel.currentProject {
-                resultRow("Prix total", value: project.costs.total, suffix: "EUR")
                 resultRow("Rendement brut", value: project.economicResult.grossYield, suffix: "%")
-                resultRow("Rendement net avant impots", value: project.economicResult.netYieldBeforeTax, suffix: "%")
-                resultRow("Cashflow avant impots", value: project.economicResult.monthlyCashflowBeforeTax, suffix: "EUR")
+                resultRow("Rendement net", value: project.economicResult.netYieldBeforeTax, suffix: "%")
                 resultRow("Rendement net-net", value: project.result.netNetYield, suffix: "%")
-                resultRow("Cashflow apres impots", value: project.result.monthlyCashflow, suffix: "EUR")
+                resultRow("Cashflow", value: project.result.monthlyCashflow, suffix: "EUR")
             } else {
                 ContentUnavailableView {
                     Label("Aucun calcul", systemImage: "function")
@@ -204,7 +202,7 @@ struct ProjectFormView: View {
     ) -> some View {
         LabeledContent {
             HStack(spacing: 6) {
-                TextField("0", value: value, formatter: NumberFormatter.evalImmoDecimal)
+                TextField("0", text: decimalTextBinding(value))
                     .multilineTextAlignment(.trailing)
                     .focused($focusedField, equals: field)
                     .evalImmoDecimalKeyboard()
@@ -215,6 +213,26 @@ struct ProjectFormView: View {
         } label: {
             LabeledFieldTitle(title: title, detail: detail)
         }
+    }
+
+    private func decimalTextBinding(_ value: Binding<Double>) -> Binding<String> {
+        Binding(
+            get: {
+                guard value.wrappedValue != 0 else { return "" }
+                return NumberFormatter.evalImmoDecimal.string(from: NSNumber(value: value.wrappedValue)) ?? ""
+            },
+            set: { newValue in
+                let normalizedValue = newValue.replacingOccurrences(of: ",", with: ".")
+
+                guard !normalizedValue.isEmpty else {
+                    value.wrappedValue = 0
+                    return
+                }
+
+                guard let doubleValue = Double(normalizedValue) else { return }
+                value.wrappedValue = doubleValue
+            }
+        )
     }
 
     private func resultRow(_ title: String, value: Double, suffix: String) -> some View {
