@@ -57,16 +57,7 @@ struct ProjectFormView: View {
             }
             .pickerStyle(.segmented)
 
-            Picker(selection: taxRegimeBinding) {
-                ForEach(viewModel.availableTaxRegimes) { taxRegime in
-                    Text(taxRegime.title).tag(taxRegime)
-                }
-            } label: {
-                LabeledFieldTitle(
-                    title: "Regime fiscal",
-                    detail: viewModel.taxRegimeHint
-                )
-            }
+            taxRegimeRow
         } header: {
             Label("Projet", systemImage: "building.2")
         }
@@ -207,6 +198,43 @@ struct ProjectFormView: View {
         .controlSize(.large)
         .padding()
         .background(.bar)
+    }
+
+    private var taxRegimeRow: some View {
+        HStack(alignment: .center, spacing: 12) {
+            LabeledFieldTitle(
+                title: "Regime fiscal",
+                detail: viewModel.taxRegimeHint
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
+
+            Menu {
+                ForEach(viewModel.availableTaxRegimes) { taxRegime in
+                    Button {
+                        viewModel.selectTaxRegime(taxRegime)
+                    } label: {
+                        if taxRegime == taxRegimeBinding.wrappedValue {
+                            Label(taxRegime.title, systemImage: "checkmark")
+                        } else {
+                            Text(taxRegime.title)
+                        }
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(taxRegimeBinding.wrappedValue.title)
+                        .lineLimit(1)
+
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption2.weight(.semibold))
+                }
+                .foregroundStyle(.secondary)
+                .frame(minWidth: 112, alignment: .trailing)
+            }
+            .accessibilityLabel("Regime fiscal")
+            .accessibilityValue(taxRegimeBinding.wrappedValue.title)
+        }
     }
 
     private func decimalField(
