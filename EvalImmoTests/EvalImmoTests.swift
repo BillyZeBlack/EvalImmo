@@ -66,12 +66,58 @@ class EvalImmoTests: XCTestCase {
         XCTAssertEqual(indicators.taxes, 3_171.84, accuracy: 0.0001)
     }
 
+    func testInvestmentCalculatorComputesFurnishedMicroBICTaxes() throws {
+        let indicators = try calculator.indicators(
+            rentalType: .furnished,
+            taxRegime: .microBIC,
+            monthlyRent: 800,
+            monthlyCondominiumFees: 100,
+            taxRate: 30,
+            monthlyPayment: 500,
+            monthlyPropertyTax: 50
+        )
+
+        XCTAssertEqual(indicators.annualRentalPrice, 9_600)
+        XCTAssertEqual(indicators.taxes, 2_265.6, accuracy: 0.0001)
+    }
+
+    func testInvestmentCalculatorAppliesFurnishedMicroBICMinimumAllowance() throws {
+        let indicators = try calculator.indicators(
+            rentalType: .furnished,
+            taxRegime: .microBIC,
+            monthlyRent: 20,
+            monthlyCondominiumFees: 0,
+            taxRate: 30,
+            monthlyPayment: 0,
+            monthlyPropertyTax: 0
+        )
+
+        XCTAssertEqual(indicators.annualRentalPrice, 240)
+        XCTAssertEqual(indicators.taxes, 0, accuracy: 0.0001)
+    }
+
     func testInvestmentCalculatorRejectsBareMicroFoncierAboveAnnualRevenueLimit() throws {
         XCTAssertThrowsError(
             try calculator.indicators(
                 rentalType: .bare,
                 taxRegime: .microFoncier,
                 monthlyRent: 1_300,
+                monthlyCondominiumFees: 100,
+                taxRate: 30,
+                monthlyPayment: 500,
+                monthlyPropertyTax: 50
+            )
+        ) { error in
+            XCTAssertEqual(error as? InvestmentCalculationError, .ineligibleTaxRegime)
+        }
+    }
+
+    func testInvestmentCalculatorRejectsFurnishedMicroBICAboveAnnualRevenueLimit() throws {
+        XCTAssertThrowsError(
+            try calculator.indicators(
+                rentalType: .furnished,
+                taxRegime: .microBIC,
+                monthlyRent: 7_000,
                 monthlyCondominiumFees: 100,
                 taxRate: 30,
                 monthlyPayment: 500,

@@ -32,7 +32,7 @@ final class ProjectFormViewModel: ObservableObject {
             errorMessage = "Le prix total doit etre superieur a zero."
         } catch InvestmentCalculationError.ineligibleTaxRegime {
             currentProject = nil
-            errorMessage = "Le micro-foncier est reserve aux revenus fonciers annuels inferieurs ou egaux a 15 000 EUR."
+            errorMessage = "Le regime fiscal choisi n'est pas compatible avec les revenus annuels saisis."
         } catch {
             currentProject = nil
             errorMessage = "Impossible de calculer les indicateurs."
@@ -49,7 +49,7 @@ final class ProjectFormViewModel: ObservableObject {
         } catch InvestmentCalculationError.invalidTotalPrice {
             errorMessage = "Le projet doit etre calcule avec un prix total valide."
         } catch InvestmentCalculationError.ineligibleTaxRegime {
-            errorMessage = "Le micro-foncier est reserve aux revenus fonciers annuels inferieurs ou egaux a 15 000 EUR."
+            errorMessage = "Le regime fiscal choisi n'est pas compatible avec les revenus annuels saisis."
         } catch {
             errorMessage = "Impossible de sauvegarder le projet."
         }
