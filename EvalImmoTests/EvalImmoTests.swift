@@ -11,6 +11,72 @@ import XCTest
 class EvalImmoTests: XCTestCase {
     private let calculator = InvestmentCalculator()
 
+    @MainActor
+    func testReferenceBareMicroFoncierProjectSnapshot() {
+        let viewModel = ProjectFormViewModel(
+            draft: InvestmentProjectDraft(
+                rentalType: .bare,
+                taxRegime: .microFoncier,
+                purchasePrice: 200_000,
+                notaryFees: 15_000,
+                agencyCosts: 8_000,
+                worksCost: 0,
+                monthlyRent: 1_000,
+                monthlyCondominiumFees: 120,
+                monthlyPropertyTax: 100,
+                monthlyPayment: 900,
+                taxRate: 11
+            )
+        )
+
+        let project = viewModel.save()
+
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertEqual(project?.costs.total ?? 0, 223_000, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicIndicators.annualRentalPrice ?? 0, 12_000, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicIndicators.annualCondominiumFees ?? 0, 1_440, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicIndicators.annualPropertyTax ?? 0, 1_200, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicResult.grossYield ?? 0, 5.3812, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicResult.netYieldBeforeTax ?? 0, 4.1973, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicResult.monthlyCashflowBeforeTax ?? 0, -120, accuracy: 0.0001)
+        XCTAssertEqual(project?.indicators.taxes ?? 0, 2_368.8, accuracy: 0.0001)
+        XCTAssertEqual(project?.result.netNetYield ?? 0, 3.1351, accuracy: 0.0001)
+        XCTAssertEqual(project?.result.monthlyCashflow ?? 0, -317.4, accuracy: 0.0001)
+    }
+
+    @MainActor
+    func testReferenceFurnishedMicroBICProjectSnapshot() {
+        let viewModel = ProjectFormViewModel(
+            draft: InvestmentProjectDraft(
+                rentalType: .furnished,
+                taxRegime: .microBIC,
+                purchasePrice: 150_000,
+                notaryFees: 12_000,
+                agencyCosts: 5_000,
+                worksCost: 8_000,
+                monthlyRent: 850,
+                monthlyCondominiumFees: 90,
+                monthlyPropertyTax: 70,
+                monthlyPayment: 650,
+                taxRate: 30
+            )
+        )
+
+        let project = viewModel.save()
+
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertEqual(project?.costs.total ?? 0, 175_000, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicIndicators.annualRentalPrice ?? 0, 10_200, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicIndicators.annualCondominiumFees ?? 0, 1_080, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicIndicators.annualPropertyTax ?? 0, 840, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicResult.grossYield ?? 0, 5.8286, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicResult.netYieldBeforeTax ?? 0, 4.7314, accuracy: 0.0001)
+        XCTAssertEqual(project?.economicResult.monthlyCashflowBeforeTax ?? 0, 40, accuracy: 0.0001)
+        XCTAssertEqual(project?.indicators.taxes ?? 0, 2_407.2, accuracy: 0.0001)
+        XCTAssertEqual(project?.result.netNetYield ?? 0, 3.3559, accuracy: 0.0001)
+        XCTAssertEqual(project?.result.monthlyCashflow ?? 0, -160.6, accuracy: 0.0001)
+    }
+
     func testInvestmentCalculatorComputesCommonEconomicResult() throws {
         let costs = try calculator.costs(
             price: 100_000,
