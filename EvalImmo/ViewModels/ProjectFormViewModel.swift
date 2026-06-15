@@ -20,11 +20,43 @@ final class ProjectFormViewModel: ObservableObject {
     ) {
         self.draft = draft
         self.calculator = calculator
+        normalizeTaxRegime()
+    }
+
+    var availableTaxRegimes: [TaxRegime] {
+        draft.rentalType.supportedTaxRegimes
+    }
+
+    var taxRegimeHint: String {
+        switch draft.taxRegime {
+        case .microFoncier:
+            return "Abattement forfaitaire de 30% sur les revenus locatifs."
+        case .microBIC:
+            return "Abattement forfaitaire de 50% sur les recettes meublees."
+        case .realFoncier, .lmnpReal:
+            return "Ce regime sera ajoute dans une prochaine etape."
+        }
+    }
+
+    @MainActor
+    func selectRentalType(_ rentalType: RentalType) {
+        draft.rentalType = rentalType
+        normalizeTaxRegime()
+        clearCurrentCalculation()
+    }
+
+    @MainActor
+    func selectTaxRegime(_ taxRegime: TaxRegime) {
+        guard availableTaxRegimes.contains(taxRegime) else { return }
+
+        draft.taxRegime = taxRegime
+        clearCurrentCalculation()
     }
 
     @MainActor
     func calculate() {
         do {
+            normalizeTaxRegime()
             currentProject = try makeProjectSnapshot()
             errorMessage = nil
         } catch InvestmentCalculationError.invalidTotalPrice {
@@ -42,6 +74,7 @@ final class ProjectFormViewModel: ObservableObject {
     @MainActor
     func save() -> InvestmentProjectSnapshot? {
         do {
+            normalizeTaxRegime()
             let project = try makeProjectSnapshot()
             currentProject = project
             errorMessage = nil
@@ -55,6 +88,18 @@ final class ProjectFormViewModel: ObservableObject {
         }
 
         return nil
+    }
+
+    private func normalizeTaxRegime() {
+        guard availableTaxRegimes.contains(draft.taxRegime) else {
+            draft.taxRegime = draft.rentalType.defaultTaxRegime
+            return
+        }
+    }
+
+    private func clearCurrentCalculation() {
+        currentProject = nil
+        errorMessage = nil
     }
 
     private func makeProjectSnapshot() throws -> InvestmentProjectSnapshot {

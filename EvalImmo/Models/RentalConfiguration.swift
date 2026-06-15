@@ -65,4 +65,13 @@ extension RentalType {
     var availableTaxRegimes: [TaxRegime] {
         TaxRegime.allCases.filter { $0.rentalType == self }
     }
+
+    var supportedTaxRegimes: [TaxRegime] {
+        switch self {
+        case .bare:
+            return [.microFoncier]
+        case .furnished:
+            return [.microBIC]
+        }
+    }
 }

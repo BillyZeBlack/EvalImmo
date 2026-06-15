@@ -77,6 +77,54 @@ class EvalImmoTests: XCTestCase {
         XCTAssertEqual(project?.result.monthlyCashflow ?? 0, -160.6, accuracy: 0.0001)
     }
 
+    @MainActor
+    func testProjectFormViewModelFiltersSupportedTaxRegimesByRentalType() {
+        let viewModel = ProjectFormViewModel()
+
+        XCTAssertEqual(viewModel.draft.rentalType, .furnished)
+        XCTAssertEqual(viewModel.availableTaxRegimes, [.microBIC])
+
+        viewModel.selectRentalType(.bare)
+
+        XCTAssertEqual(viewModel.draft.rentalType, .bare)
+        XCTAssertEqual(viewModel.draft.taxRegime, .microFoncier)
+        XCTAssertEqual(viewModel.availableTaxRegimes, [.microFoncier])
+    }
+
+    @MainActor
+    func testProjectFormViewModelIgnoresUnsupportedTaxRegimeSelection() {
+        let viewModel = ProjectFormViewModel()
+
+        viewModel.selectTaxRegime(.lmnpReal)
+
+        XCTAssertEqual(viewModel.draft.taxRegime, .microBIC)
+    }
+
+    @MainActor
+    func testProjectFormViewModelClearsCurrentCalculationWhenRentalTypeChanges() {
+        let viewModel = ProjectFormViewModel(
+            draft: InvestmentProjectDraft(
+                rentalType: .furnished,
+                taxRegime: .microBIC,
+                purchasePrice: 150_000,
+                notaryFees: 12_000,
+                monthlyRent: 850,
+                monthlyCondominiumFees: 90,
+                monthlyPropertyTax: 70,
+                monthlyPayment: 650,
+                taxRate: 30
+            )
+        )
+
+        viewModel.calculate()
+        XCTAssertNotNil(viewModel.currentProject)
+
+        viewModel.selectRentalType(.bare)
+
+        XCTAssertNil(viewModel.currentProject)
+        XCTAssertNil(viewModel.errorMessage)
+    }
+
     func testInvestmentCalculatorComputesCommonEconomicResult() throws {
         let costs = try calculator.costs(
             price: 100_000,

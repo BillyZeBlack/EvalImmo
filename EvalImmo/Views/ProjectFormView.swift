@@ -58,13 +58,13 @@ struct ProjectFormView: View {
             .pickerStyle(.segmented)
 
             Picker(selection: taxRegimeBinding) {
-                ForEach(viewModel.draft.rentalType.availableTaxRegimes) { taxRegime in
+                ForEach(viewModel.availableTaxRegimes) { taxRegime in
                     Text(taxRegime.title).tag(taxRegime)
                 }
             } label: {
                 LabeledFieldTitle(
                     title: "Regime fiscal",
-                    detail: "Option associee au type de location."
+                    detail: viewModel.taxRegimeHint
                 )
             }
         } header: {
@@ -238,8 +238,7 @@ struct ProjectFormView: View {
         Binding(
             get: { viewModel.draft.rentalType },
             set: { rentalType in
-                viewModel.draft.rentalType = rentalType
-                viewModel.draft.taxRegime = rentalType.defaultTaxRegime
+                viewModel.selectRentalType(rentalType)
             }
         )
     }
@@ -248,12 +247,12 @@ struct ProjectFormView: View {
         Binding(
             get: {
                 let taxRegime = viewModel.draft.taxRegime
-                return taxRegime.rentalType == viewModel.draft.rentalType
+                return viewModel.availableTaxRegimes.contains(taxRegime)
                     ? taxRegime
                     : viewModel.draft.rentalType.defaultTaxRegime
             },
             set: { taxRegime in
-                viewModel.draft.taxRegime = taxRegime
+                viewModel.selectTaxRegime(taxRegime)
             }
         )
     }
