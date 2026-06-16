@@ -3,11 +3,22 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		9F371AB8263AA67300FF5835 /* InvestmentCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AB7263AA67300FF5835 /* InvestmentCalculator.swift */; };
+		9F371AC1263AA67300FF5835 /* InvestmentProjectDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */; };
+		9F371AC2263AA67300FF5835 /* InvestmentProjectSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */; };
+		9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */; };
+		9F371AC4263AA67300FF5835 /* ProjectFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABD263AA67300FF5835 /* ProjectFormView.swift */; };
+		9F371AC5263AA67300FF5835 /* ProjectRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABE263AA67300FF5835 /* ProjectRepository.swift */; };
+		9F371AD4263AA67300FF5835 /* EvalImmoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */; };
+		9F371AD5263AA67300FF5835 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD3263AA67300FF5835 /* RootView.swift */; };
+		9F371AD8263AA67300FF5835 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD7263AA67300FF5835 /* AppState.swift */; };
+		9F371AE1263AA67300FF5835 /* ProjectStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ADE263AA67300FF5835 /* ProjectStore.swift */; };
+		9F371AE2263AA67300FF5835 /* ProjectListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ADF263AA67300FF5835 /* ProjectListView.swift */; };
+		9F371AE3263AA67300FF5835 /* ProjectDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */; };
 		9F371AE5263AA67300FF5835 /* InvestmentCosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE4263AA67300FF5835 /* InvestmentCosts.swift */; };
 		9F371AE7263AA67300FF5835 /* InvestmentIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE6263AA67300FF5835 /* InvestmentIndicators.swift */; };
 		9F371AE9263AA67300FF5835 /* InvestmentYieldResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE8263AA67300FF5835 /* InvestmentYieldResult.swift */; };
@@ -15,17 +26,6 @@
 		9F371AED263AA67300FF5835 /* InvestmentEconomicIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AEC263AA67300FF5835 /* InvestmentEconomicIndicators.swift */; };
 		9F371AEF263AA67300FF5835 /* InvestmentEconomicResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AEE263AA67300FF5835 /* InvestmentEconomicResult.swift */; };
 		9F371AF1263AA67300FF5835 /* InvestmentTaxCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF0263AA67300FF5835 /* InvestmentTaxCalculator.swift */; };
-		9F371AC1263AA67300FF5835 /* InvestmentProjectDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */; };
-		9F371AC2263AA67300FF5835 /* InvestmentProjectSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */; };
-		9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */; };
-		9F371AC4263AA67300FF5835 /* ProjectFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABD263AA67300FF5835 /* ProjectFormView.swift */; };
-		9F371AC5263AA67300FF5835 /* ProjectRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ABE263AA67300FF5835 /* ProjectRepository.swift */; };
-		9F371AE1263AA67300FF5835 /* ProjectStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ADE263AA67300FF5835 /* ProjectStore.swift */; };
-		9F371AE2263AA67300FF5835 /* ProjectListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ADF263AA67300FF5835 /* ProjectListView.swift */; };
-		9F371AE3263AA67300FF5835 /* ProjectDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */; };
-		9F371AD4263AA67300FF5835 /* EvalImmoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */; };
-		9F371AD5263AA67300FF5835 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD3263AA67300FF5835 /* RootView.swift */; };
-		9F371AD8263AA67300FF5835 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AD7263AA67300FF5835 /* AppState.swift */; };
 		9F4CADD626091456006BCF52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F4CADD526091456006BCF52 /* Assets.xcassets */; };
 		9F4CADD926091456006BCF52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F4CADD726091456006BCF52 /* LaunchScreen.storyboard */; };
 		9F4CADE426091456006BCF52 /* EvalImmoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4CADE326091456006BCF52 /* EvalImmoTests.swift */; };
@@ -51,6 +51,17 @@
 
 /* Begin PBXFileReference section */
 		9F371AB7263AA67300FF5835 /* InvestmentCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentCalculator.swift; sourceTree = "<group>"; };
+		9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentProjectDraft.swift; sourceTree = "<group>"; };
+		9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentProjectSnapshot.swift; sourceTree = "<group>"; };
+		9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormViewModel.swift; sourceTree = "<group>"; };
+		9F371ABD263AA67300FF5835 /* ProjectFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormView.swift; sourceTree = "<group>"; };
+		9F371ABE263AA67300FF5835 /* ProjectRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectRepository.swift; sourceTree = "<group>"; };
+		9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvalImmoApp.swift; sourceTree = "<group>"; };
+		9F371AD3263AA67300FF5835 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		9F371AD7263AA67300FF5835 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		9F371ADE263AA67300FF5835 /* ProjectStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStore.swift; sourceTree = "<group>"; };
+		9F371ADF263AA67300FF5835 /* ProjectListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListView.swift; sourceTree = "<group>"; };
+		9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
 		9F371AE4263AA67300FF5835 /* InvestmentCosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentCosts.swift; sourceTree = "<group>"; };
 		9F371AE6263AA67300FF5835 /* InvestmentIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentIndicators.swift; sourceTree = "<group>"; };
 		9F371AE8263AA67300FF5835 /* InvestmentYieldResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentYieldResult.swift; sourceTree = "<group>"; };
@@ -58,17 +69,6 @@
 		9F371AEC263AA67300FF5835 /* InvestmentEconomicIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentEconomicIndicators.swift; sourceTree = "<group>"; };
 		9F371AEE263AA67300FF5835 /* InvestmentEconomicResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentEconomicResult.swift; sourceTree = "<group>"; };
 		9F371AF0263AA67300FF5835 /* InvestmentTaxCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentTaxCalculator.swift; sourceTree = "<group>"; };
-		9F371ABA263AA67300FF5835 /* InvestmentProjectDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentProjectDraft.swift; sourceTree = "<group>"; };
-		9F371ABB263AA67300FF5835 /* InvestmentProjectSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentProjectSnapshot.swift; sourceTree = "<group>"; };
-		9F371ABC263AA67300FF5835 /* ProjectFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormViewModel.swift; sourceTree = "<group>"; };
-		9F371ABD263AA67300FF5835 /* ProjectFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFormView.swift; sourceTree = "<group>"; };
-		9F371ABE263AA67300FF5835 /* ProjectRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectRepository.swift; sourceTree = "<group>"; };
-		9F371ADE263AA67300FF5835 /* ProjectStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStore.swift; sourceTree = "<group>"; };
-		9F371ADF263AA67300FF5835 /* ProjectListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListView.swift; sourceTree = "<group>"; };
-		9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
-		9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvalImmoApp.swift; sourceTree = "<group>"; };
-		9F371AD3263AA67300FF5835 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		9F371AD7263AA67300FF5835 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		9F4CADC926091455006BCF52 /* EvalImmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EvalImmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F4CADD526091456006BCF52 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9F4CADD826091456006BCF52 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -106,51 +106,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9F4CADC026091454006BCF52 = {
-			isa = PBXGroup;
-			children = (
-				9F4CADCB26091455006BCF52 /* EvalImmo */,
-				9F4CADE226091456006BCF52 /* EvalImmoTests */,
-				9F4CADED26091456006BCF52 /* EvalImmoUITests */,
-				9F4CADCA26091455006BCF52 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		9F4CADCA26091455006BCF52 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9F4CADC926091455006BCF52 /* EvalImmo.app */,
-				9F4CADDF26091456006BCF52 /* EvalImmoTests.xctest */,
-				9F4CADEA26091456006BCF52 /* EvalImmoUITests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		9F4CADCB26091455006BCF52 /* EvalImmo */ = {
-			isa = PBXGroup;
-			children = (
-				9F371AD6263AA67300FF5835 /* App */,
-				9F371AB9263AA67300FF5835 /* Core */,
-				9F371AC8263AA67300FF5835 /* Models */,
-				9F371AC9263AA67300FF5835 /* ViewModels */,
-				9F371ACA263AA67300FF5835 /* Views */,
-				9F371AD0263AA67300FF5835 /* Services */,
-				9F4CADD526091456006BCF52 /* Assets.xcassets */,
-				9F4CADD726091456006BCF52 /* LaunchScreen.storyboard */,
-				9F4CADDA26091456006BCF52 /* Info.plist */,
-			);
-			path = EvalImmo;
-			sourceTree = "<group>";
-		};
-		9F4CADE226091456006BCF52 /* EvalImmoTests */ = {
-			isa = PBXGroup;
-			children = (
-				9F4CADE326091456006BCF52 /* EvalImmoTests.swift */,
-				9F4CADE526091456006BCF52 /* Info.plist */,
-			);
-			path = EvalImmoTests;
-			sourceTree = "<group>";
-		};
 		9F371AB9263AA67300FF5835 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,6 +173,51 @@
 				9F371AD3263AA67300FF5835 /* RootView.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		9F4CADC026091454006BCF52 = {
+			isa = PBXGroup;
+			children = (
+				9F4CADCB26091455006BCF52 /* EvalImmo */,
+				9F4CADE226091456006BCF52 /* EvalImmoTests */,
+				9F4CADED26091456006BCF52 /* EvalImmoUITests */,
+				9F4CADCA26091455006BCF52 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9F4CADCA26091455006BCF52 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9F4CADC926091455006BCF52 /* EvalImmo.app */,
+				9F4CADDF26091456006BCF52 /* EvalImmoTests.xctest */,
+				9F4CADEA26091456006BCF52 /* EvalImmoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9F4CADCB26091455006BCF52 /* EvalImmo */ = {
+			isa = PBXGroup;
+			children = (
+				9F371AD6263AA67300FF5835 /* App */,
+				9F371AB9263AA67300FF5835 /* Core */,
+				9F371AC8263AA67300FF5835 /* Models */,
+				9F371AC9263AA67300FF5835 /* ViewModels */,
+				9F371ACA263AA67300FF5835 /* Views */,
+				9F371AD0263AA67300FF5835 /* Services */,
+				9F4CADD526091456006BCF52 /* Assets.xcassets */,
+				9F4CADD726091456006BCF52 /* LaunchScreen.storyboard */,
+				9F4CADDA26091456006BCF52 /* Info.plist */,
+			);
+			path = EvalImmo;
+			sourceTree = "<group>";
+		};
+		9F4CADE226091456006BCF52 /* EvalImmoTests */ = {
+			isa = PBXGroup;
+			children = (
+				9F4CADE326091456006BCF52 /* EvalImmoTests.swift */,
+				9F4CADE526091456006BCF52 /* Info.plist */,
+			);
+			path = EvalImmoTests;
 			sourceTree = "<group>";
 		};
 		9F4CADED26091456006BCF52 /* EvalImmoUITests */ = {
@@ -546,14 +546,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-					CODE_SIGN_STYLE = Automatic;
-					DEVELOPMENT_TEAM = JW5QDUDC7K;
-					INFOPLIST_FILE = EvalImmo/Info.plist;
-					IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-					LD_RUNPATH_SEARCH_PATHS = (
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JW5QDUDC7K;
+				INFOPLIST_FILE = EvalImmo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Valoria : Analyse locative";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sliceofdigital.EvalImmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -566,14 +570,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-					CODE_SIGN_STYLE = Automatic;
-					DEVELOPMENT_TEAM = JW5QDUDC7K;
-					INFOPLIST_FILE = EvalImmo/Info.plist;
-					IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-					LD_RUNPATH_SEARCH_PATHS = (
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JW5QDUDC7K;
+				INFOPLIST_FILE = EvalImmo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Valoria : Analyse locative";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sliceofdigital.EvalImmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -705,7 +713,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
 	};
 	rootObject = 9F4CADC126091454006BCF52 /* Project object */;
 }
