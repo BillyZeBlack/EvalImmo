@@ -435,4 +435,68 @@ class EvalImmoTests: XCTestCase {
         XCTAssertEqual(viewModel.currentProject?.indicators.taxes ?? 0, 3_171.84, accuracy: 0.0001)
         XCTAssertEqual(viewModel.currentProject?.result.grossYield ?? 0, 8, accuracy: 0.0001)
     }
+
+    @MainActor
+    func testProjectFormViewModelPreservesProjectNameWhenSaving() {
+        let viewModel = ProjectFormViewModel(
+            draft: InvestmentProjectDraft(
+                name: "Studio centre-ville",
+                rentalType: .bare,
+                taxRegime: .microFoncier,
+                purchasePrice: 100_000,
+                notaryFees: 8_000,
+                monthlyRent: 800,
+                monthlyCondominiumFees: 100,
+                annualPropertyTax: 600,
+                monthlyPayment: 500,
+                taxRate: 30
+            )
+        )
+
+        let project = viewModel.save()
+
+        XCTAssertEqual(project?.draft.name, "Studio centre-ville")
+    }
+
+    @MainActor
+    func testProjectStoreDeletesSavedProject() {
+        let store = ProjectStore()
+        let project = InvestmentProjectSnapshot(
+            draft: InvestmentProjectDraft(name: "Studio centre-ville"),
+            costs: InvestmentCosts(price: 100_000, notaryFees: 8_000),
+            economicIndicators: InvestmentEconomicIndicators(
+                annualRentalPrice: 9_600,
+                annualCondominiumFees: 1_200,
+                monthlyPayment: 500,
+                annualPropertyTax: 600,
+                annualOwnerInsurance: 180
+            ),
+            economicResult: InvestmentEconomicResult(
+                grossYield: 8,
+                netYieldBeforeTax: 6.5,
+                monthlyCashflowBeforeTax: 150
+            ),
+            indicators: InvestmentIndicators(
+                annualRentalPrice: 9_600,
+                annualCondominiumFees: 1_200,
+                taxes: 2_265.6,
+                monthlyPayment: 500,
+                annualPropertyTax: 600,
+                annualOwnerInsurance: 180
+            ),
+            result: InvestmentYieldResult(
+                grossYield: 8,
+                netYield: 6.5,
+                netNetYield: 4.61,
+                monthlyCashflow: -38.8
+            )
+        )
+
+        store.save(project)
+        XCTAssertEqual(store.projects.count, 1)
+
+        store.deleteProject(with: project.id)
+
+        XCTAssertTrue(store.projects.isEmpty)
+    }
 }

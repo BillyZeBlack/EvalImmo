@@ -17,6 +17,7 @@ struct ProjectDetailView: View {
     var body: some View {
         List {
             Section("Projet") {
+                textRow("Nom", value: projectTitle)
                 textRow("Type de location", value: project.draft.rentalType.title)
                 textRow("Regime fiscal", value: project.draft.taxRegime.title)
             }
@@ -24,19 +25,28 @@ struct ProjectDetailView: View {
             InvestmentResultsDetailView(project: project)
         }
         .navigationTitle("Projet")
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
+        .tint(.teal)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(action: onAddProject) {
-                    Label("Nouveau projet", systemImage: "plus")
-                }
+                Button("Nouveau projet", systemImage: "plus", action: onAddProject)
             }
         }
     }
 
+    private var projectTitle: String {
+        let name = project.draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else {
+            return "Projet du \(project.createdAt.formatted(date: .abbreviated, time: .omitted))"
+        }
+
+        return name
+    }
+
     private func textRow(_ title: String, value: String) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
+        LabeledContent(title) {
             Text(value)
                 .foregroundStyle(.secondary)
         }
@@ -129,6 +139,7 @@ struct InvestmentResultsDetailView: View {
     private func resultRow(_ title: String, value: Double, format: ResultValueFormat) -> some View {
         LabeledContent(title) {
             Text(format.string(from: value))
+                .font(.body.monospacedDigit())
                 .foregroundStyle(value < 0 ? .red : .secondary)
         }
     }

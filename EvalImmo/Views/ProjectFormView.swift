@@ -7,6 +7,9 @@ import SwiftUI
 
 struct ProjectFormView: View {
     @StateObject private var viewModel: ProjectFormViewModel
+    @State private var projectPendingSave: InvestmentProjectSnapshot?
+    @State private var projectName: String = ""
+    @State private var isShowingSavePrompt = false
     @FocusState private var focusedField: ProjectFormField?
     private let onSave: (InvestmentProjectSnapshot) -> Void
 
@@ -27,6 +30,9 @@ struct ProjectFormView: View {
             resultSection
         }
         .navigationTitle("Mon projet")
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
+        .tint(.teal)
         .safeAreaInset(edge: .bottom) {
             actionBar
         }
@@ -46,6 +52,21 @@ struct ProjectFormView: View {
                 dismissButton: .default(Text("OK"))
             )
         }
+        .alert("Nom du projet", isPresented: $isShowingSavePrompt) {
+            TextField("Ex. Studio centre-ville", text: $projectName)
+                .textInputAutocapitalization(.words)
+
+            Button("Annuler", role: .cancel) {
+                projectPendingSave = nil
+                projectName = ""
+            }
+
+            Button("Sauvegarder") {
+                savePendingProject()
+            }
+        } message: {
+            Text("Ajoute un nom pour retrouver facilement ce projet dans la liste.")
+        }
     }
 
     private var projectTypeSection: some View {
@@ -56,10 +77,11 @@ struct ProjectFormView: View {
                 }
             }
             .pickerStyle(.segmented)
+            .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
 
             taxRegimeRow
         } header: {
-            Label("Projet", systemImage: "building.2")
+            ProjectSectionHeader(title: "Projet", systemImage: "building.2")
         }
     }
 
@@ -90,7 +112,7 @@ struct ProjectFormView: View {
                 field: .worksCost
             )
         } header: {
-            Label("Acquisition", systemImage: "house")
+            ProjectSectionHeader(title: "Acquisition", systemImage: "house")
         }
     }
 
@@ -141,7 +163,7 @@ struct ProjectFormView: View {
                 )
             }
         } header: {
-            Label("Revenus et charges", systemImage: "chart.line.uptrend.xyaxis")
+            ProjectSectionHeader(title: "Revenus et charges", systemImage: "chart.line.uptrend.xyaxis")
         }
     }
 
@@ -160,51 +182,81 @@ struct ProjectFormView: View {
                 field: .downPayment
             )
         } header: {
-            Label("Financement", systemImage: "creditcard")
+            ProjectSectionHeader(title: "Financement", systemImage: "creditcard")
         }
     }
 
     private var resultSection: some View {
         Section {
             if let project = viewModel.currentProject {
-                resultRow("Montant finance", value: project.costs.financedAmount, suffix: "EUR")
-                resultRow("Rendement brut", value: project.economicResult.grossYield, suffix: "%")
-                resultRow("Rendement net", value: project.economicResult.netYieldBeforeTax, suffix: "%")
-                resultRow("Rendement net-net", value: project.result.netNetYield, suffix: "%")
-                resultRow("Cashflow", value: project.result.monthlyCashflow, suffix: "EUR")
+                resultRow("Montant finance", value: project.costs.financedAmount, suffix: "EUR", style: .standard)
+                resultRow("Rendement brut", value: project.economicResult.grossYield, suffix: "%", style: .standard)
+                resultRow("Rendement net", value: project.economicResult.netYieldBeforeTax, suffix: "%", style: .standard)
+                resultRow("Rendement net-net", value: project.result.netNetYield, suffix: "%", style: .highlight)
+                resultRow("Cashflow", value: project.result.monthlyCashflow, suffix: "EUR", style: .signed)
             } else {
                 ContentUnavailableView {
                     Label("Aucun calcul", systemImage: "function")
                 }
             }
         } header: {
-            Label("Indicateurs", systemImage: "percent")
+            ProjectSectionHeader(title: "Indicateurs", systemImage: "percent")
         }
     }
 
     private var actionBar: some View {
         HStack(spacing: 12) {
-            Button {
-                viewModel.calculate()
-            } label: {
+            Button(action: viewModel.calculate) {
                 Label("Calculer", systemImage: "function")
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, minHeight: 44)
             }
             .buttonStyle(.borderedProminent)
+            .tint(.teal)
 
             Button {
-                guard let project = viewModel.save() else { return }
-                onSave(project)
+                prepareProjectSave()
             } label: {
                 Label("Sauvegarder", systemImage: "tray.and.arrow.down")
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, minHeight: 44)
             }
             .buttonStyle(.bordered)
             .disabled(viewModel.currentProject == nil)
         }
         .controlSize(.large)
-        .padding()
-        .background(.bar)
+        .buttonBorderShape(.roundedRectangle)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.regularMaterial)
+    }
+
+    private func prepareProjectSave() {
+        guard let project = viewModel.save() else { return }
+
+        projectPendingSave = project
+        projectName = project.draft.name
+        isShowingSavePrompt = true
+    }
+
+    private func savePendingProject() {
+        guard let project = projectPendingSave else { return }
+
+        var namedDraft = project.draft
+        namedDraft.name = projectName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let namedProject = InvestmentProjectSnapshot(
+            id: project.id,
+            createdAt: project.createdAt,
+            draft: namedDraft,
+            costs: project.costs,
+            economicIndicators: project.economicIndicators,
+            economicResult: project.economicResult,
+            indicators: project.indicators,
+            result: project.result
+        )
+
+        projectPendingSave = nil
+        projectName = ""
+        onSave(namedProject)
     }
 
     private var taxRegimeRow: some View {
@@ -237,6 +289,7 @@ struct ProjectFormView: View {
                         .font(.caption2.weight(.semibold))
                 }
                 .foregroundStyle(.secondary)
+                .font(.body)
                 .frame(minWidth: 112, alignment: .trailing)
             }
             .accessibilityLabel("Regime fiscal")
@@ -255,10 +308,12 @@ struct ProjectFormView: View {
             HStack(spacing: 6) {
                 TextField("0", text: decimalTextBinding(value))
                     .multilineTextAlignment(.trailing)
+                    .font(.body.monospacedDigit())
                     .focused($focusedField, equals: field)
                     .evalImmoDecimalKeyboard()
 
                 Text(suffix)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
         } label: {
@@ -286,10 +341,22 @@ struct ProjectFormView: View {
         )
     }
 
-    private func resultRow(_ title: String, value: Double, suffix: String) -> some View {
+    private func resultRow(_ title: String, value: Double, suffix: String, style: ProjectResultRowStyle) -> some View {
         LabeledContent(title) {
             Text("\(value, specifier: "%.2f") \(suffix)")
-                .foregroundStyle(.secondary)
+                .font(style == .highlight ? .headline.monospacedDigit() : .body.monospacedDigit())
+                .foregroundStyle(resultForegroundStyle(value: value, style: style))
+        }
+    }
+
+    private func resultForegroundStyle(value: Double, style: ProjectResultRowStyle) -> Color {
+        switch style {
+        case .standard:
+            return .secondary
+        case .highlight:
+            return .teal
+        case .signed:
+            return value < 0 ? .red : .green
         }
     }
 
@@ -346,15 +413,34 @@ private enum ProjectFormField: Hashable {
     case downPayment
 }
 
+private enum ProjectResultRowStyle {
+    case standard
+    case highlight
+    case signed
+}
+
+private struct ProjectSectionHeader: View {
+    let title: String
+    let systemImage: String
+
+    var body: some View {
+        Label(title, systemImage: systemImage)
+            .font(.footnote)
+            .bold()
+            .foregroundStyle(.secondary)
+    }
+}
+
 private struct LabeledFieldTitle: View {
     let title: String
     let detail: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(title)
+                .font(.body)
             Text(detail)
-                .font(.subheadline)
+                .font(.footnote)
                 .foregroundStyle(.secondary)
         }
     }

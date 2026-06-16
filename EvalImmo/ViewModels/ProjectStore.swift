@@ -25,6 +25,15 @@ final class ProjectStore: ObservableObject {
         }
     }
 
+    func deleteProject(with id: InvestmentProjectSnapshot.ID) {
+        do {
+            try repository.deleteProject(with: id)
+            projects = repository.projects
+        } catch {
+            // In-memory deletion cannot currently fail.
+        }
+    }
+
     func project(with id: InvestmentProjectSnapshot.ID) -> InvestmentProjectSnapshot? {
         projects.first { $0.id == id }
     }

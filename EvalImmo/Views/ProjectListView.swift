@@ -7,6 +7,7 @@ import SwiftUI
 
 struct ProjectListView: View {
     @ObservedObject var store: ProjectStore
+    @State private var projectPendingDeletion: InvestmentProjectSnapshot?
     let onAddProject: () -> Void
 
     var body: some View {
@@ -20,17 +21,68 @@ struct ProjectListView: View {
                     NavigationLink(value: AppState.Route.projectDetail(project.id)) {
                         ProjectRowView(project: project)
                     }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            projectPendingDeletion = project
+                        } label: {
+                            Label("Supprimer", systemImage: "trash")
+                        }
+                    }
+                    .confirmationDialog(
+                        "Supprimer ce projet ?",
+                        isPresented: deletionConfirmationBinding(for: project),
+                        titleVisibility: .visible
+                    ) {
+                        Button("Supprimer", role: .destructive) {
+                            deletePendingProject()
+                        }
+
+                        Button("Annuler", role: .cancel) {
+                            projectPendingDeletion = nil
+                        }
+                    } message: {
+                        Text("Cette action supprimera definitivement \(projectTitle(for: project)).")
+                    }
                 }
             }
         }
         .navigationTitle("Projets")
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
+        .tint(.teal)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(action: onAddProject) {
-                    Label("Nouveau projet", systemImage: "plus")
-                }
+                Button("Nouveau projet", systemImage: "plus", action: onAddProject)
             }
         }
+    }
+
+    private func deletionConfirmationBinding(for project: InvestmentProjectSnapshot) -> Binding<Bool> {
+        Binding(
+            get: { projectPendingDeletion?.id == project.id },
+            set: { isPresented in
+                if !isPresented {
+                    projectPendingDeletion = nil
+                }
+            }
+        )
+    }
+
+    private func deletePendingProject() {
+        guard let project = projectPendingDeletion else { return }
+
+        store.deleteProject(with: project.id)
+        projectPendingDeletion = nil
+    }
+
+    private func projectTitle(for project: InvestmentProjectSnapshot) -> String {
+        let name = project.draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else {
+            return "ce projet"
+        }
+
+        return "\"\(name)\""
     }
 }
 
@@ -67,10 +119,9 @@ private struct ProjectPortfolioSummaryView: View {
     }
 
     private func summaryRow(_ title: String, value: String) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
+        LabeledContent(title) {
             Text(value)
+                .font(.body.monospacedDigit())
                 .foregroundStyle(.secondary)
         }
     }
@@ -85,43 +136,49 @@ private struct ProjectRowView: View {
     let project: InvestmentProjectSnapshot
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(projectTitle)
-                .font(.headline)
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(projectTitle)
+                        .font(.headline)
 
-            Text("\(project.draft.rentalType.title) - \(project.draft.taxRegime.title)")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                    Text(project.createdAt.formatted(date: .abbreviated, time: .omitted))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
 
-            HStack {
-                Text("Prix total")
                 Spacer()
-                Text("\(project.costs.total, specifier: "%.0f") EUR")
+
+                Text(formattedCashflow)
+                    .font(.headline.monospacedDigit())
+                    .foregroundStyle(project.result.monthlyCashflow < 0 ? .red : .green)
             }
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
 
-            HStack {
-                Text("Rendement net-net")
-                Spacer()
-                Text("\(project.result.netNetYield, specifier: "%.2f") %")
-            }
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-
-            HStack {
-                Text("Cashflow mensuel")
-                Spacer()
-                Text("\(project.result.monthlyCashflow, specifier: "%.2f") EUR")
+            LabeledContent("Montant bien + travaux") {
+                Text("\(projectAmount, specifier: "%.0f") EUR")
+                    .font(.subheadline.monospacedDigit())
             }
             .font(.subheadline)
             .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 8)
+    }
+
+    private var projectAmount: Double {
+        project.costs.price + project.costs.works
+    }
+
+    private var formattedCashflow: String {
+        String(format: "%.2f EUR", project.result.monthlyCashflow)
     }
 
     private var projectTitle: String {
-        "Projet du \(project.createdAt.formatted(date: .abbreviated, time: .omitted))"
+        let name = project.draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else {
+            return "Projet du \(project.createdAt.formatted(date: .abbreviated, time: .omitted))"
+        }
+
+        return name
     }
 }
 
