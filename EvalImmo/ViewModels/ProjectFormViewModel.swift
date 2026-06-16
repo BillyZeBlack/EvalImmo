@@ -110,7 +110,8 @@ final class ProjectFormViewModel: ObservableObject {
             price: draft.purchasePrice,
             notaryFees: draft.notaryFees,
             agencyCosts: draft.agencyCosts,
-            works: draft.worksCost
+            works: draft.worksCost,
+            downPayment: draft.downPayment
         )
         let economicIndicators = try calculator.economicIndicators(
             monthlyRent: draft.monthlyRent,

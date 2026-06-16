@@ -18,16 +18,18 @@ struct InvestmentCalculator {
         price: Double,
         notaryFees: Double,
         agencyCosts: Double = 0,
-        works: Double = 0
+        works: Double = 0,
+        downPayment: Double = 0
     ) throws -> InvestmentCosts {
         let costs = InvestmentCosts(
             price: price,
             notaryFees: notaryFees,
             agencyCosts: agencyCosts,
-            works: works
+            works: works,
+            downPayment: downPayment
         )
 
-        try validate([costs.price, costs.notaryFees, costs.agencyCosts, costs.works])
+        try validate([costs.price, costs.notaryFees, costs.agencyCosts, costs.works, costs.downPayment])
         return costs
     }
 

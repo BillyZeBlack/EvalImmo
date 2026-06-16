@@ -153,6 +153,12 @@ struct ProjectFormView: View {
                 value: $viewModel.draft.monthlyPayment,
                 field: .monthlyPayment
             )
+            decimalField(
+                "Apport",
+                detail: "Montant financé sans emprunt.",
+                value: $viewModel.draft.downPayment,
+                field: .downPayment
+            )
         } header: {
             Label("Financement", systemImage: "creditcard")
         }
@@ -161,6 +167,7 @@ struct ProjectFormView: View {
     private var resultSection: some View {
         Section {
             if let project = viewModel.currentProject {
+                resultRow("Montant finance", value: project.costs.financedAmount, suffix: "EUR")
                 resultRow("Rendement brut", value: project.economicResult.grossYield, suffix: "%")
                 resultRow("Rendement net", value: project.economicResult.netYieldBeforeTax, suffix: "%")
                 resultRow("Rendement net-net", value: project.result.netNetYield, suffix: "%")
@@ -336,6 +343,7 @@ private enum ProjectFormField: Hashable {
     case annualPropertyTax
     case annualOwnerInsurance
     case monthlyPayment
+    case downPayment
 }
 
 private struct LabeledFieldTitle: View {

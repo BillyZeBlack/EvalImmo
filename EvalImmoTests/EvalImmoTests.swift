@@ -149,6 +149,31 @@ class EvalImmoTests: XCTestCase {
         XCTAssertEqual(result.monthlyCashflowBeforeTax, 150, accuracy: 0.0001)
     }
 
+    func testInvestmentCalculatorIncludesDownPaymentInCosts() throws {
+        let costs = try calculator.costs(
+            price: 100_000,
+            notaryFees: 8_000,
+            agencyCosts: 5_000,
+            works: 7_000,
+            downPayment: 20_000
+        )
+
+        XCTAssertEqual(costs.total, 120_000)
+        XCTAssertEqual(costs.downPayment, 20_000)
+        XCTAssertEqual(costs.financedAmount, 100_000)
+    }
+
+    func testInvestmentCalculatorDoesNotExposeNegativeFinancedAmount() throws {
+        let costs = try calculator.costs(
+            price: 100_000,
+            notaryFees: 8_000,
+            downPayment: 120_000
+        )
+
+        XCTAssertEqual(costs.total, 108_000)
+        XCTAssertEqual(costs.financedAmount, 0)
+    }
+
     func testInvestmentCalculatorAppliesVacancyAndOwnerInsuranceToEconomicResult() throws {
         let costs = try calculator.costs(
             price: 200_000,

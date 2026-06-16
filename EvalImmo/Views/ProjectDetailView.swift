@@ -82,6 +82,8 @@ struct InvestmentResultsDetailView: View {
             resultRow("Frais de notaire", value: project.costs.notaryFees, format: .currency)
             resultRow("Frais d'agence", value: project.costs.agencyCosts, format: .currency)
             resultRow("Travaux", value: project.costs.works, format: .currency)
+            resultRow("Apport", value: project.costs.downPayment, format: .currency)
+            resultRow("Montant finance", value: project.costs.financedAmount, format: .currency)
             resultRow("Prix total", value: project.costs.total, format: .currency)
         } header: {
             Label("Acquisition", systemImage: "house")
