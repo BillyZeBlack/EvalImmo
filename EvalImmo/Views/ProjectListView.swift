@@ -28,21 +28,6 @@ struct ProjectListView: View {
                             Label("Supprimer", systemImage: "trash")
                         }
                     }
-                    .confirmationDialog(
-                        "Supprimer ce projet ?",
-                        isPresented: deletionConfirmationBinding(for: project),
-                        titleVisibility: .visible
-                    ) {
-                        Button("Supprimer", role: .destructive) {
-                            deletePendingProject()
-                        }
-
-                        Button("Annuler", role: .cancel) {
-                            projectPendingDeletion = nil
-                        }
-                    } message: {
-                        Text("Cette action supprimera définitivement \(projectTitle(for: project)).")
-                    }
                 }
             }
         }
@@ -57,17 +42,40 @@ struct ProjectListView: View {
                 Button("Nouveau projet", systemImage: "plus", action: onAddProject)
             }
         }
+        .confirmationDialog(
+            "Supprimer ce projet ?",
+            isPresented: deletionConfirmationBinding,
+            titleVisibility: .visible
+        ) {
+            Button("Supprimer", role: .destructive) {
+                deletePendingProject()
+            }
+
+            Button("Annuler", role: .cancel) {
+                projectPendingDeletion = nil
+            }
+        } message: {
+            Text("Cette action supprimera définitivement \(projectTitleForPendingDeletion).")
+        }
     }
 
-    private func deletionConfirmationBinding(for project: InvestmentProjectSnapshot) -> Binding<Bool> {
+    private var deletionConfirmationBinding: Binding<Bool> {
         Binding(
-            get: { projectPendingDeletion?.id == project.id },
+            get: { projectPendingDeletion != nil },
             set: { isPresented in
                 if !isPresented {
                     projectPendingDeletion = nil
                 }
             }
         )
+    }
+
+    private var projectTitleForPendingDeletion: String {
+        guard let project = projectPendingDeletion else {
+            return "ce projet"
+        }
+
+        return projectTitle(for: project)
     }
 
     private func deletePendingProject() {
