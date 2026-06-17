@@ -7,11 +7,11 @@ import SwiftUI
 
 struct ProjectDetailView: View {
     let project: InvestmentProjectSnapshot
-    let onAddProject: () -> Void
+    let onEditProject: () -> Void
 
-    init(project: InvestmentProjectSnapshot, onAddProject: @escaping () -> Void = {}) {
+    init(project: InvestmentProjectSnapshot, onEditProject: @escaping () -> Void = {}) {
         self.project = project
-        self.onAddProject = onAddProject
+        self.onEditProject = onEditProject
     }
 
     var body: some View {
@@ -32,7 +32,7 @@ struct ProjectDetailView: View {
         .toolbarBackground(ProjectDetailPalette.background, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Nouveau projet", systemImage: "plus", action: onAddProject)
+                Button("Modifier", systemImage: "pencil", action: onEditProject)
             }
         }
     }

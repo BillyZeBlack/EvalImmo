@@ -11,13 +11,25 @@ struct ProjectFormView: View {
     @State private var projectName: String = ""
     @State private var isShowingSavePrompt = false
     @FocusState private var focusedField: ProjectFormField?
+    private let editedProject: InvestmentProjectSnapshot?
     private let onSave: (InvestmentProjectSnapshot) -> Void
 
     init(
         viewModel: ProjectFormViewModel = ProjectFormViewModel(),
+        editedProject: InvestmentProjectSnapshot? = nil,
         onSave: @escaping (InvestmentProjectSnapshot) -> Void = { _ in }
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.editedProject = editedProject
+        self.onSave = onSave
+    }
+
+    init(
+        project: InvestmentProjectSnapshot,
+        onSave: @escaping (InvestmentProjectSnapshot) -> Void = { _ in }
+    ) {
+        _viewModel = StateObject(wrappedValue: ProjectFormViewModel(draft: project.draft, currentProject: project))
+        self.editedProject = project
         self.onSave = onSave
     }
 
@@ -29,7 +41,7 @@ struct ProjectFormView: View {
             financingSection
             resultSection
         }
-        .navigationTitle("Mon projet")
+        .navigationTitle(isEditing ? "Modifier le projet" : "Mon projet")
         .scrollContentBackground(.hidden)
         .background(ProjectFormPalette.background)
         .tint(ProjectFormPalette.brand)
@@ -62,11 +74,11 @@ struct ProjectFormView: View {
                 projectName = ""
             }
 
-            Button("Sauvegarder") {
+            Button(savePromptActionTitle) {
                 savePendingProject()
             }
         } message: {
-            Text("Ajoutez un nom pour retrouver facilement ce projet dans la liste.")
+            Text(savePromptMessage)
         }
     }
 
@@ -222,7 +234,7 @@ struct ProjectFormView: View {
             Button {
                 prepareProjectSave()
             } label: {
-                Label("Sauvegarder", systemImage: "tray.and.arrow.down")
+                Label(saveButtonTitle, systemImage: saveButtonIcon)
                     .frame(maxWidth: .infinity, minHeight: 44)
             }
             .buttonStyle(.bordered)
@@ -238,8 +250,9 @@ struct ProjectFormView: View {
     private func prepareProjectSave() {
         guard let project = viewModel.save() else { return }
 
-        projectPendingSave = project
-        projectName = project.draft.name
+        let projectToSave = projectForCurrentMode(from: project)
+        projectPendingSave = projectToSave
+        projectName = projectToSave.draft.name
         isShowingSavePrompt = true
     }
 
@@ -263,6 +276,45 @@ struct ProjectFormView: View {
         projectPendingSave = nil
         projectName = ""
         onSave(namedProject)
+    }
+
+    private var isEditing: Bool {
+        editedProject != nil
+    }
+
+    private var saveButtonTitle: String {
+        isEditing ? "Mettre à jour" : "Sauvegarder"
+    }
+
+    private var saveButtonIcon: String {
+        isEditing ? "checkmark.circle" : "tray.and.arrow.down"
+    }
+
+    private var savePromptActionTitle: String {
+        isEditing ? "Mettre à jour" : "Sauvegarder"
+    }
+
+    private var savePromptMessage: String {
+        if isEditing {
+            return "Vous pouvez ajuster le nom avant de mettre à jour ce projet."
+        }
+
+        return "Ajoutez un nom pour retrouver facilement ce projet dans la liste."
+    }
+
+    private func projectForCurrentMode(from project: InvestmentProjectSnapshot) -> InvestmentProjectSnapshot {
+        guard let editedProject else { return project }
+
+        return InvestmentProjectSnapshot(
+            id: editedProject.id,
+            createdAt: editedProject.createdAt,
+            draft: project.draft,
+            costs: project.costs,
+            economicIndicators: project.economicIndicators,
+            economicResult: project.economicResult,
+            indicators: project.indicators,
+            result: project.result
+        )
     }
 
     private var taxRegimeRow: some View {

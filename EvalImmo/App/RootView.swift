@@ -24,11 +24,26 @@ struct RootView: View {
                         projectStore.save(project)
                         appState.showProject(id: project.id)
                     }
+                case .editProject(let id):
+                    if let project = projectStore.project(with: id) {
+                        ProjectFormView(project: project) { updatedProject in
+                            projectStore.save(updatedProject)
+                            appState.showProject(id: updatedProject.id)
+                        }
+                    } else {
+                        ContentUnavailableView(
+                            "Projet introuvable",
+                            systemImage: "exclamationmark.triangle",
+                            description: Text("Ce projet n'est plus disponible.")
+                        )
+                    }
                 case .projectDetail(let id):
                     if let project = projectStore.project(with: id) {
                         ProjectDetailView(
                             project: project,
-                            onAddProject: appState.showNewProject
+                            onEditProject: {
+                                appState.editProject(id: project.id)
+                            }
                         )
                     } else {
                         ContentUnavailableView(

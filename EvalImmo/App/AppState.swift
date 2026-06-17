@@ -8,6 +8,7 @@ import Foundation
 final class AppState: ObservableObject {
     enum Route: Hashable {
         case newProject
+        case editProject(UUID)
         case projectDetail(UUID)
     }
 
@@ -20,6 +21,11 @@ final class AppState: ObservableObject {
     @MainActor
     func showNewProject() {
         path.append(.newProject)
+    }
+
+    @MainActor
+    func editProject(id: UUID) {
+        path.append(.editProject(id))
     }
 
     @MainActor

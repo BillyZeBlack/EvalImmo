@@ -16,9 +16,11 @@ final class ProjectFormViewModel: ObservableObject {
 
     init(
         draft: InvestmentProjectDraft = InvestmentProjectDraft(),
+        currentProject: InvestmentProjectSnapshot? = nil,
         calculator: InvestmentCalculator = InvestmentCalculator()
     ) {
         self.draft = draft
+        self.currentProject = currentProject
         self.calculator = calculator
         normalizeTaxRegime()
     }

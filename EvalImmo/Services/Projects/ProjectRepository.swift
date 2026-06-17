@@ -20,7 +20,11 @@ final class InMemoryProjectRepository: ProjectRepository {
     private(set) var projects: [InvestmentProjectSnapshot] = []
 
     func save(_ project: InvestmentProjectSnapshot) throws {
-        projects.append(project)
+        if let index = projects.firstIndex(where: { $0.id == project.id }) {
+            projects[index] = project
+        } else {
+            projects.append(project)
+        }
     }
 
     func deleteProject(with id: InvestmentProjectSnapshot.ID) throws {
