@@ -19,8 +19,6 @@
 		9F371AE1263AA67300FF5835 /* ProjectStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ADE263AA67300FF5835 /* ProjectStore.swift */; };
 		9F371AE2263AA67300FF5835 /* ProjectListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371ADF263AA67300FF5835 /* ProjectListView.swift */; };
 		9F371AE3263AA67300FF5835 /* ProjectDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */; };
-		9F371AF3263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF2263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift */; };
-		9F371AF5263AA67300FF5835 /* MonthlyFlowChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */; };
 		9F371AE5263AA67300FF5835 /* InvestmentCosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE4263AA67300FF5835 /* InvestmentCosts.swift */; };
 		9F371AE7263AA67300FF5835 /* InvestmentIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE6263AA67300FF5835 /* InvestmentIndicators.swift */; };
 		9F371AE9263AA67300FF5835 /* InvestmentYieldResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AE8263AA67300FF5835 /* InvestmentYieldResult.swift */; };
@@ -28,6 +26,9 @@
 		9F371AED263AA67300FF5835 /* InvestmentEconomicIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AEC263AA67300FF5835 /* InvestmentEconomicIndicators.swift */; };
 		9F371AEF263AA67300FF5835 /* InvestmentEconomicResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AEE263AA67300FF5835 /* InvestmentEconomicResult.swift */; };
 		9F371AF1263AA67300FF5835 /* InvestmentTaxCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF0263AA67300FF5835 /* InvestmentTaxCalculator.swift */; };
+		9F371AF3263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF2263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift */; };
+		9F371AF5263AA67300FF5835 /* MonthlyFlowChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */; };
+		9F371AF7263AA67300FF5835 /* LaunchSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF6263AA67300FF5835 /* LaunchSplashView.swift */; };
 		9F4CADD626091456006BCF52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F4CADD526091456006BCF52 /* Assets.xcassets */; };
 		9F4CADD926091456006BCF52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F4CADD726091456006BCF52 /* LaunchScreen.storyboard */; };
 		9F4CADE426091456006BCF52 /* EvalImmoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4CADE326091456006BCF52 /* EvalImmoTests.swift */; };
@@ -64,8 +65,6 @@
 		9F371ADE263AA67300FF5835 /* ProjectStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStore.swift; sourceTree = "<group>"; };
 		9F371ADF263AA67300FF5835 /* ProjectListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListView.swift; sourceTree = "<group>"; };
 		9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
-		9F371AF2263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentPerformanceSummaryView.swift; sourceTree = "<group>"; };
-		9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyFlowChartView.swift; sourceTree = "<group>"; };
 		9F371AE4263AA67300FF5835 /* InvestmentCosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentCosts.swift; sourceTree = "<group>"; };
 		9F371AE6263AA67300FF5835 /* InvestmentIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentIndicators.swift; sourceTree = "<group>"; };
 		9F371AE8263AA67300FF5835 /* InvestmentYieldResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentYieldResult.swift; sourceTree = "<group>"; };
@@ -73,6 +72,9 @@
 		9F371AEC263AA67300FF5835 /* InvestmentEconomicIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentEconomicIndicators.swift; sourceTree = "<group>"; };
 		9F371AEE263AA67300FF5835 /* InvestmentEconomicResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentEconomicResult.swift; sourceTree = "<group>"; };
 		9F371AF0263AA67300FF5835 /* InvestmentTaxCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentTaxCalculator.swift; sourceTree = "<group>"; };
+		9F371AF2263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentPerformanceSummaryView.swift; sourceTree = "<group>"; };
+		9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyFlowChartView.swift; sourceTree = "<group>"; };
+		9F371AF6263AA67300FF5835 /* LaunchSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchSplashView.swift; sourceTree = "<group>"; };
 		9F4CADC926091455006BCF52 /* EvalImmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EvalImmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F4CADD526091456006BCF52 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9F4CADD826091456006BCF52 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				9F371AF2263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift */,
+				9F371AF6263AA67300FF5835 /* LaunchSplashView.swift */,
 				9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */,
 				9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */,
 				9F371ABD263AA67300FF5835 /* ProjectFormView.swift */,
@@ -372,6 +375,7 @@
 				9F371AC1263AA67300FF5835 /* InvestmentProjectDraft.swift in Sources */,
 				9F371AC4263AA67300FF5835 /* ProjectFormView.swift in Sources */,
 				9F371AF3263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift in Sources */,
+				9F371AF7263AA67300FF5835 /* LaunchSplashView.swift in Sources */,
 				9F371AF5263AA67300FF5835 /* MonthlyFlowChartView.swift in Sources */,
 				9F371AE3263AA67300FF5835 /* ProjectDetailView.swift in Sources */,
 				9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */,
@@ -555,7 +559,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = JW5QDUDC7K;
 				INFOPLIST_FILE = EvalImmo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Valoria : Analyse locative";
@@ -565,7 +569,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = sliceofdigital.EvalImmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -579,7 +583,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = JW5QDUDC7K;
 				INFOPLIST_FILE = EvalImmo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Valoria : Analyse locative";
@@ -589,7 +593,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = sliceofdigital.EvalImmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
