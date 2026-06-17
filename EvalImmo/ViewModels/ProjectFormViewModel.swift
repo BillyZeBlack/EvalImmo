@@ -121,7 +121,8 @@ final class ProjectFormViewModel: ObservableObject {
             monthlyCondominiumFees: draft.monthlyCondominiumFees,
             monthlyPayment: draft.monthlyPayment,
             monthlyPropertyTax: monthlyPropertyTax,
-            annualOwnerInsurance: draft.annualOwnerInsurance
+            annualOwnerInsurance: draft.annualOwnerInsurance,
+            annualAccountantFees: draft.annualAccountantFees
         )
         let economicResult = try calculator.economicResult(
             costs: costs,
@@ -137,6 +138,7 @@ final class ProjectFormViewModel: ObservableObject {
             monthlyPayment: draft.monthlyPayment,
             monthlyPropertyTax: monthlyPropertyTax,
             annualOwnerInsurance: draft.annualOwnerInsurance,
+            annualAccountantFees: draft.annualAccountantFees,
             costs: costs
         )
         let result = try calculator.yields(costs: costs, indicators: indicators)

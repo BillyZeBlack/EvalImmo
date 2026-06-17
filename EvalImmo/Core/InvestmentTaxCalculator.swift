@@ -21,6 +21,7 @@ struct InvestmentTaxCalculator {
         annualCondominiumFees: Double,
         annualPropertyTax: Double,
         annualOwnerInsurance: Double,
+        annualAccountantFees: Double,
         monthlyRent: Double,
         taxRate: Double,
         costs: InvestmentCosts?
@@ -37,6 +38,7 @@ struct InvestmentTaxCalculator {
                 annualCondominiumFees: annualCondominiumFees,
                 annualPropertyTax: annualPropertyTax,
                 annualOwnerInsurance: annualOwnerInsurance,
+                annualAccountantFees: annualAccountantFees,
                 taxRate: taxRate
             )
         case (.furnished, .microBIC):
@@ -50,6 +52,7 @@ struct InvestmentTaxCalculator {
                 annualCondominiumFees: annualCondominiumFees,
                 annualPropertyTax: annualPropertyTax,
                 annualOwnerInsurance: annualOwnerInsurance,
+                annualAccountantFees: annualAccountantFees,
                 taxRate: taxRate,
                 costs: costs
             )
@@ -75,10 +78,15 @@ struct InvestmentTaxCalculator {
         annualCondominiumFees: Double,
         annualPropertyTax: Double,
         annualOwnerInsurance: Double,
+        annualAccountantFees: Double,
         taxRate: Double
     ) -> Double {
         let taxableIncome = max(
-            annualRentalPrice - annualCondominiumFees - annualPropertyTax - annualOwnerInsurance,
+            annualRentalPrice
+                - annualCondominiumFees
+                - annualPropertyTax
+                - annualOwnerInsurance
+                - annualAccountantFees,
             0
         )
         return taxableIncome * ((taxRate + socialContributionsRate) / 100)
@@ -105,6 +113,7 @@ struct InvestmentTaxCalculator {
         annualCondominiumFees: Double,
         annualPropertyTax: Double,
         annualOwnerInsurance: Double,
+        annualAccountantFees: Double,
         taxRate: Double,
         costs: InvestmentCosts?
     ) -> Double {
@@ -114,6 +123,7 @@ struct InvestmentTaxCalculator {
                 - annualCondominiumFees
                 - annualPropertyTax
                 - annualOwnerInsurance
+                - annualAccountantFees
                 - annualAmortization,
             0
         )

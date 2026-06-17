@@ -43,6 +43,7 @@ struct InvestmentCalculator {
         monthlyPayment: Double,
         monthlyPropertyTax: Double,
         annualOwnerInsurance: Double = 0,
+        annualAccountantFees: Double = 0,
         costs: InvestmentCosts? = nil
     ) throws -> InvestmentIndicators {
         let economicIndicators = try economicIndicators(
@@ -51,7 +52,8 @@ struct InvestmentCalculator {
             monthlyCondominiumFees: monthlyCondominiumFees,
             monthlyPayment: monthlyPayment,
             monthlyPropertyTax: monthlyPropertyTax,
-            annualOwnerInsurance: annualOwnerInsurance
+            annualOwnerInsurance: annualOwnerInsurance,
+            annualAccountantFees: annualAccountantFees
         )
         let indicators = InvestmentIndicators(
             annualRentalPrice: economicIndicators.annualRentalPrice,
@@ -63,13 +65,15 @@ struct InvestmentCalculator {
                 annualCondominiumFees: economicIndicators.annualCondominiumFees,
                 annualPropertyTax: economicIndicators.annualPropertyTax,
                 annualOwnerInsurance: economicIndicators.annualOwnerInsurance,
+                annualAccountantFees: economicIndicators.annualAccountantFees,
                 monthlyRent: monthlyRent,
                 taxRate: taxRate,
                 costs: costs
             ),
             monthlyPayment: economicIndicators.monthlyPayment,
             annualPropertyTax: economicIndicators.annualPropertyTax,
-            annualOwnerInsurance: economicIndicators.annualOwnerInsurance
+            annualOwnerInsurance: economicIndicators.annualOwnerInsurance,
+            annualAccountantFees: economicIndicators.annualAccountantFees
         )
 
         try validate([
@@ -78,7 +82,8 @@ struct InvestmentCalculator {
             indicators.taxes,
             indicators.monthlyPayment,
             indicators.annualPropertyTax,
-            indicators.annualOwnerInsurance
+            indicators.annualOwnerInsurance,
+            indicators.annualAccountantFees
         ])
         return indicators
     }
@@ -89,7 +94,8 @@ struct InvestmentCalculator {
         monthlyCondominiumFees: Double,
         monthlyPayment: Double,
         monthlyPropertyTax: Double,
-        annualOwnerInsurance: Double = 0
+        annualOwnerInsurance: Double = 0,
+        annualAccountantFees: Double = 0
     ) throws -> InvestmentEconomicIndicators {
         guard (0...100).contains(vacancyRate) else {
             throw InvestmentCalculationError.invalidInput
@@ -102,7 +108,8 @@ struct InvestmentCalculator {
             annualCondominiumFees: monthlyCondominiumFees * 12,
             monthlyPayment: monthlyPayment,
             annualPropertyTax: monthlyPropertyTax * 12,
-            annualOwnerInsurance: annualOwnerInsurance
+            annualOwnerInsurance: annualOwnerInsurance,
+            annualAccountantFees: annualAccountantFees
         )
 
         try validate([
@@ -110,7 +117,8 @@ struct InvestmentCalculator {
             indicators.annualCondominiumFees,
             indicators.monthlyPayment,
             indicators.annualPropertyTax,
-            indicators.annualOwnerInsurance
+            indicators.annualOwnerInsurance,
+            indicators.annualAccountantFees
         ])
         return indicators
     }
@@ -131,6 +139,7 @@ struct InvestmentCalculator {
                 indicators.annualCondominiumFees
                 + indicators.annualPropertyTax
                 + indicators.annualOwnerInsurance
+                + indicators.annualAccountantFees
             ))
             / totalPrice
         ) * 100
@@ -139,6 +148,7 @@ struct InvestmentCalculator {
                 (indicators.annualCondominiumFees / 12)
                 + (indicators.annualPropertyTax / 12)
                 + (indicators.annualOwnerInsurance / 12)
+                + (indicators.annualAccountantFees / 12)
                 + indicators.monthlyPayment
             )
 
@@ -158,7 +168,8 @@ struct InvestmentCalculator {
             annualCondominiumFees: indicators.annualCondominiumFees,
             monthlyPayment: indicators.monthlyPayment,
             annualPropertyTax: indicators.annualPropertyTax,
-            annualOwnerInsurance: indicators.annualOwnerInsurance
+            annualOwnerInsurance: indicators.annualOwnerInsurance,
+            annualAccountantFees: indicators.annualAccountantFees
         )
         let economicResult = try economicResult(costs: costs, indicators: economicIndicators)
         let totalPrice = costs.total
@@ -167,6 +178,7 @@ struct InvestmentCalculator {
                 indicators.annualCondominiumFees
                 + indicators.annualPropertyTax
                 + indicators.annualOwnerInsurance
+                + indicators.annualAccountantFees
                 + indicators.taxes
             ))
             / totalPrice
@@ -177,6 +189,7 @@ struct InvestmentCalculator {
                 (indicators.annualCondominiumFees / 12)
                 + (indicators.annualPropertyTax / 12)
                 + (indicators.annualOwnerInsurance / 12)
+                + (indicators.annualAccountantFees / 12)
                 + (indicators.taxes / 12)
                 + indicators.monthlyPayment
             )

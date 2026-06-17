@@ -21,6 +21,7 @@ struct MonthlyFlowChartView: View {
         (project.economicIndicators.annualCondominiumFees / 12)
             + (project.economicIndicators.annualPropertyTax / 12)
             + (project.economicIndicators.annualOwnerInsurance / 12)
+            + (project.economicIndicators.annualAccountantFees / 12)
     }
 
     private var cashflow: Double {

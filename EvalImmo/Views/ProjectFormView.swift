@@ -166,6 +166,13 @@ struct ProjectFormView: View {
                 field: .annualOwnerInsurance,
                 suffix: "EUR/an"
             )
+            decimalField(
+                "Comptable",
+                detail: "Facturation annuelle.",
+                value: $viewModel.draft.annualAccountantFees,
+                field: .annualAccountantFees,
+                suffix: "EUR/an"
+            )
 
             Picker(selection: $viewModel.draft.taxRate) {
                 ForEach(viewModel.taxRates, id: \.self) { rate in
@@ -467,6 +474,7 @@ private enum ProjectFormField: Hashable {
     case monthlyCondominiumFees
     case annualPropertyTax
     case annualOwnerInsurance
+    case annualAccountantFees
     case monthlyPayment
     case downPayment
 }
