@@ -7,7 +7,7 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject private var appState: AppState
-    @StateObject private var projectStore = ProjectStore()
+    @StateObject private var projectStore = ProjectStore(repository: FileProjectRepository())
     @State private var hasPresentedInitialProjectForm = false
 
     var body: some View {

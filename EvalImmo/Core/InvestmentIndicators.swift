@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct InvestmentIndicators: Equatable {
+struct InvestmentIndicators: Codable, Equatable {
     let annualRentalPrice: Double
     let annualCondominiumFees: Double
     let taxes: Double

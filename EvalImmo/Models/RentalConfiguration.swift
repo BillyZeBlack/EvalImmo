@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum RentalType: String, CaseIterable, Equatable, Identifiable {
+enum RentalType: String, CaseIterable, Codable, Equatable, Identifiable {
     case bare = "bare"
     case furnished = "furnished"
 
@@ -21,7 +21,7 @@ enum RentalType: String, CaseIterable, Equatable, Identifiable {
     }
 }
 
-enum TaxRegime: String, CaseIterable, Equatable, Identifiable {
+enum TaxRegime: String, CaseIterable, Codable, Equatable, Identifiable {
     case microFoncier = "microFoncier"
     case realFoncier = "realFoncier"
     case microBIC = "microBIC"

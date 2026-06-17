@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct InvestmentProjectSnapshot: Identifiable, Equatable {
+struct InvestmentProjectSnapshot: Codable, Identifiable, Equatable {
     let id: UUID
     let createdAt: Date
     let draft: InvestmentProjectDraft

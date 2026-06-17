@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct InvestmentCosts: Equatable {
+struct InvestmentCosts: Codable, Equatable {
     let price: Double
     let notaryFees: Double
     let agencyCosts: Double

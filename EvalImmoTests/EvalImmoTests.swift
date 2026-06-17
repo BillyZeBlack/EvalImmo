@@ -499,4 +499,52 @@ class EvalImmoTests: XCTestCase {
 
         XCTAssertTrue(store.projects.isEmpty)
     }
+
+    @MainActor
+    func testFileProjectRepositoryPersistsSavedProjects() throws {
+        let fileURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathComponent("projects.json")
+        let project = InvestmentProjectSnapshot(
+            id: UUID(uuidString: "C0E4D47E-1B88-48F8-A589-126883D6D0D1")!,
+            createdAt: Date(timeIntervalSince1970: 1_800_000_000),
+            draft: InvestmentProjectDraft(name: "T2 Nantes"),
+            costs: InvestmentCosts(price: 120_000, notaryFees: 9_000, works: 5_000),
+            economicIndicators: InvestmentEconomicIndicators(
+                annualRentalPrice: 8_400,
+                annualCondominiumFees: 960,
+                monthlyPayment: 620,
+                annualPropertyTax: 900,
+                annualOwnerInsurance: 120
+            ),
+            economicResult: InvestmentEconomicResult(
+                grossYield: 6.26,
+                netYieldBeforeTax: 4.78,
+                monthlyCashflowBeforeTax: -100
+            ),
+            indicators: InvestmentIndicators(
+                annualRentalPrice: 8_400,
+                annualCondominiumFees: 960,
+                taxes: 1_200,
+                monthlyPayment: 620,
+                annualPropertyTax: 900,
+                annualOwnerInsurance: 120
+            ),
+            result: InvestmentYieldResult(
+                grossYield: 6.26,
+                netYield: 4.78,
+                netNetYield: 3.88,
+                monthlyCashflow: -200
+            )
+        )
+
+        let repository = FileProjectRepository(fileURL: fileURL)
+        try repository.save(project)
+
+        let reloadedRepository = FileProjectRepository(fileURL: fileURL)
+
+        XCTAssertEqual(reloadedRepository.projects, [project])
+
+        try? FileManager.default.removeItem(at: fileURL.deletingLastPathComponent())
+    }
 }

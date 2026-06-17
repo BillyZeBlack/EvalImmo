@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct InvestmentYieldResult: Equatable {
+struct InvestmentYieldResult: Codable, Equatable {
     let grossYield: Double
     let netYield: Double
     let netNetYield: Double

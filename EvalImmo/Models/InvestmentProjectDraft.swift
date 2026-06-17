@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct InvestmentProjectDraft: Equatable {
+struct InvestmentProjectDraft: Codable, Equatable {
     var name: String = ""
     var rentalType: RentalType = .furnished
     var taxRegime: TaxRegime = .microBIC
