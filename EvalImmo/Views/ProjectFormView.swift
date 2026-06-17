@@ -31,8 +31,9 @@ struct ProjectFormView: View {
         }
         .navigationTitle("Mon projet")
         .scrollContentBackground(.hidden)
-        .background(Color(.systemGroupedBackground))
-        .tint(.teal)
+        .background(ProjectFormPalette.background)
+        .tint(ProjectFormPalette.brand)
+        .toolbarBackground(ProjectFormPalette.background, for: .navigationBar)
         .safeAreaInset(edge: .bottom) {
             actionBar
         }
@@ -65,7 +66,7 @@ struct ProjectFormView: View {
                 savePendingProject()
             }
         } message: {
-            Text("Ajoute un nom pour retrouver facilement ce projet dans la liste.")
+            Text("Ajoutez un nom pour retrouver facilement ce projet dans la liste.")
         }
     }
 
@@ -83,19 +84,20 @@ struct ProjectFormView: View {
         } header: {
             ProjectSectionHeader(title: "Projet", systemImage: "building.2")
         }
+        .listRowBackground(ProjectFormPalette.card)
     }
 
     private var acquisitionSection: some View {
         Section {
             decimalField(
                 "Prix d'achat",
-                detail: "Prix net vendeur du bien.",
+                detail: "Prix net-vendeur du bien.",
                 value: $viewModel.draft.purchasePrice,
                 field: .purchasePrice
             )
             decimalField(
                 "Frais de notaire",
-                detail: "Montant estime a l'acquisition.",
+                detail: "Montant estimé à l'acquisition.",
                 value: $viewModel.draft.notaryFees,
                 field: .notaryFees
             )
@@ -107,13 +109,14 @@ struct ProjectFormView: View {
             )
             decimalField(
                 "Travaux",
-                detail: "Budget travaux conserve dans le calcul.",
+                detail: "Budget travaux conservé dans le calcul.",
                 value: $viewModel.draft.worksCost,
                 field: .worksCost
             )
         } header: {
             ProjectSectionHeader(title: "Acquisition", systemImage: "house")
         }
+        .listRowBackground(ProjectFormPalette.card)
     }
 
     private var rentalSection: some View {
@@ -126,27 +129,27 @@ struct ProjectFormView: View {
             )
             decimalField(
                 "Vacance locative",
-                detail: "Part annuelle estimee sans loyer.",
+                detail: "Part annuelle estimée sans loyer.",
                 value: $viewModel.draft.vacancyRate,
                 field: .vacancyRate,
                 suffix: "%"
             )
             decimalField(
-                "Charges de copropriete",
+                "Charges de copropriété",
                 detail: "Montant mensuel.",
                 value: $viewModel.draft.monthlyCondominiumFees,
                 field: .monthlyCondominiumFees
             )
             decimalField(
-                "Taxe fonciere",
-                detail: "Montant annuel connu ou estime.",
+                "Taxe foncière",
+                detail: "Montant annuel connu ou estimé.",
                 value: $viewModel.draft.annualPropertyTax,
                 field: .annualPropertyTax,
                 suffix: "EUR/an"
             )
             decimalField(
                 "Assurance PNO",
-                detail: "Montant annuel estime.",
+                detail: "Montant annuel estimé.",
                 value: $viewModel.draft.annualOwnerInsurance,
                 field: .annualOwnerInsurance,
                 suffix: "EUR/an"
@@ -159,19 +162,20 @@ struct ProjectFormView: View {
             } label: {
                 LabeledFieldTitle(
                     title: "Taux marginal d'imposition",
-                    detail: "TMI utilise pour l'impot."
+                    detail: "TMI utilisé pour l'impôt."
                 )
             }
         } header: {
             ProjectSectionHeader(title: "Revenus et charges", systemImage: "chart.line.uptrend.xyaxis")
         }
+        .listRowBackground(ProjectFormPalette.card)
     }
 
     private var financingSection: some View {
         Section {
             decimalField(
-                "Mensualite de credit",
-                detail: "Credit assurance comprise si applicable.",
+                "Mensualité de crédit",
+                detail: "Crédit assurance comprise si applicable.",
                 value: $viewModel.draft.monthlyPayment,
                 field: .monthlyPayment
             )
@@ -184,12 +188,13 @@ struct ProjectFormView: View {
         } header: {
             ProjectSectionHeader(title: "Financement", systemImage: "creditcard")
         }
+        .listRowBackground(ProjectFormPalette.card)
     }
 
     private var resultSection: some View {
         Section {
             if let project = viewModel.currentProject {
-                resultRow("Montant finance", value: project.costs.financedAmount, suffix: "EUR", style: .standard)
+                resultRow("Montant financé", value: project.costs.financedAmount, suffix: "EUR", style: .standard)
                 resultRow("Rendement brut", value: project.economicResult.grossYield, suffix: "%", style: .standard)
                 resultRow("Rendement net", value: project.economicResult.netYieldBeforeTax, suffix: "%", style: .standard)
                 resultRow("Rendement net-net", value: project.result.netNetYield, suffix: "%", style: .highlight)
@@ -202,16 +207,17 @@ struct ProjectFormView: View {
         } header: {
             ProjectSectionHeader(title: "Indicateurs", systemImage: "percent")
         }
+        .listRowBackground(ProjectFormPalette.card)
     }
 
     private var actionBar: some View {
         HStack(spacing: 12) {
             Button(action: viewModel.calculate) {
-                Label("Calculer", systemImage: "function")
+                Label("Analyser", systemImage: "chart.xyaxis.line")
                     .frame(maxWidth: .infinity, minHeight: 44)
             }
             .buttonStyle(.borderedProminent)
-            .tint(.teal)
+            .tint(ProjectFormPalette.brand)
 
             Button {
                 prepareProjectSave()
@@ -226,7 +232,7 @@ struct ProjectFormView: View {
         .buttonBorderShape(.roundedRectangle)
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(.regularMaterial)
+        .background(ProjectFormPalette.barMaterial)
     }
 
     private func prepareProjectSave() {
@@ -262,7 +268,7 @@ struct ProjectFormView: View {
     private var taxRegimeRow: some View {
         HStack(alignment: .center, spacing: 12) {
             LabeledFieldTitle(
-                title: "Regime fiscal",
+                title: "Régime fiscal",
                 detail: viewModel.taxRegimeHint
             )
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -292,7 +298,7 @@ struct ProjectFormView: View {
                 .font(.body)
                 .frame(minWidth: 112, alignment: .trailing)
             }
-            .accessibilityLabel("Regime fiscal")
+            .accessibilityLabel("Régime fiscal")
             .accessibilityValue(taxRegimeBinding.wrappedValue.title)
         }
     }
@@ -354,9 +360,9 @@ struct ProjectFormView: View {
         case .standard:
             return .secondary
         case .highlight:
-            return .teal
+            return ProjectFormPalette.brand
         case .signed:
-            return value < 0 ? .red : .green
+            return value < 0 ? ProjectFormPalette.loss : ProjectFormPalette.gain
         }
     }
 
@@ -427,7 +433,7 @@ private struct ProjectSectionHeader: View {
         Label(title, systemImage: systemImage)
             .font(.footnote)
             .bold()
-            .foregroundStyle(.secondary)
+            .foregroundStyle(ProjectFormPalette.brand)
     }
 }
 
@@ -439,6 +445,7 @@ private struct LabeledFieldTitle: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.body)
+                .foregroundStyle(ProjectFormPalette.ink)
             Text(detail)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -465,6 +472,16 @@ private extension View {
         self
         #endif
     }
+}
+
+private enum ProjectFormPalette {
+    static let background = Color(red: 0.93, green: 0.97, blue: 0.96)
+    static let card = Color.white
+    static let brand = Color(red: 0.02, green: 0.29, blue: 0.24)
+    static let ink = Color(red: 0.08, green: 0.13, blue: 0.14)
+    static let gain = Color(red: 0.00, green: 0.48, blue: 0.38)
+    static let loss = Color(red: 0.78, green: 0.18, blue: 0.16)
+    static let barMaterial = Color.white.opacity(0.94)
 }
 
 struct ProjectFormView_Previews: PreviewProvider {

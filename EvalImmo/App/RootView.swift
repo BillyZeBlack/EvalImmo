@@ -8,6 +8,7 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject private var appState: AppState
     @StateObject private var projectStore = ProjectStore()
+    @State private var hasPresentedInitialProjectForm = false
 
     var body: some View {
         NavigationStack(path: $appState.path) {
@@ -15,6 +16,7 @@ struct RootView: View {
                 store: projectStore,
                 onAddProject: appState.showNewProject
             )
+            .onAppear(perform: presentInitialProjectFormIfNeeded)
             .navigationDestination(for: AppState.Route.self) { route in
                 switch route {
                 case .newProject:
@@ -38,6 +40,15 @@ struct RootView: View {
                 }
             }
         }
+    }
+
+    private func presentInitialProjectFormIfNeeded() {
+        guard !hasPresentedInitialProjectForm else { return }
+        guard projectStore.projects.isEmpty else { return }
+        guard appState.path.isEmpty else { return }
+
+        hasPresentedInitialProjectForm = true
+        appState.showNewProject()
     }
 }
 

@@ -19,7 +19,7 @@ struct ProjectDetailView: View {
             Section("Projet") {
                 textRow("Nom", value: projectTitle)
                 textRow("Type de location", value: project.draft.rentalType.title)
-                textRow("Regime fiscal", value: project.draft.taxRegime.title)
+                textRow("Régime fiscal", value: project.draft.taxRegime.title)
             }
 
             InvestmentResultsDetailView(project: project)
@@ -27,8 +27,9 @@ struct ProjectDetailView: View {
         .navigationTitle("Projet")
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
-        .background(Color(.systemGroupedBackground))
-        .tint(.teal)
+        .background(ProjectDetailPalette.background)
+        .tint(ProjectDetailPalette.brand)
+        .toolbarBackground(ProjectDetailPalette.background, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Nouveau projet", systemImage: "plus", action: onAddProject)
@@ -80,9 +81,9 @@ struct InvestmentResultsDetailView: View {
         Section {
             resultRow("Prix total", value: project.costs.total, format: .currency)
             resultRow("Rendement brut", value: project.economicResult.grossYield, format: .percent)
-            resultRow("Rendement net avant impots", value: project.economicResult.netYieldBeforeTax, format: .percent)
+            resultRow("Rendement net avant impôts", value: project.economicResult.netYieldBeforeTax, format: .percent)
             resultRow("Rendement net-net", value: project.result.netNetYield, format: .percent)
-            resultRow("Cashflow apres impots", value: project.result.monthlyCashflow, format: .currency)
+            resultRow("Cashflow apres impôts", value: project.result.monthlyCashflow, format: .currency)
         } header: {
             Label("Synthese", systemImage: "chart.pie")
         }
@@ -93,7 +94,7 @@ struct InvestmentResultsDetailView: View {
             resultRow("Frais d'agence", value: project.costs.agencyCosts, format: .currency)
             resultRow("Travaux", value: project.costs.works, format: .currency)
             resultRow("Apport", value: project.costs.downPayment, format: .currency)
-            resultRow("Montant finance", value: project.costs.financedAmount, format: .currency)
+            resultRow("Montant financé", value: project.costs.financedAmount, format: .currency)
             resultRow("Prix total", value: project.costs.total, format: .currency)
         } header: {
             Label("Acquisition", systemImage: "house")
@@ -104,33 +105,33 @@ struct InvestmentResultsDetailView: View {
             resultRow("Loyers annuels", value: project.economicIndicators.annualRentalPrice, format: .currency)
             resultRow("Charges mensuelles", value: monthlyCondominiumFees, format: .currency)
             resultRow("Charges annuelles", value: project.economicIndicators.annualCondominiumFees, format: .currency)
-            resultRow("Taxe fonciere mensuelle", value: monthlyPropertyTax, format: .currency)
-            resultRow("Taxe fonciere annuelle", value: project.economicIndicators.annualPropertyTax, format: .currency)
+            resultRow("Taxe foncière mensuelle", value: monthlyPropertyTax, format: .currency)
+            resultRow("Taxe foncière annuelle", value: project.economicIndicators.annualPropertyTax, format: .currency)
             resultRow("Assurance PNO mensuelle", value: monthlyOwnerInsurance, format: .currency)
             resultRow("Assurance PNO annuelle", value: project.economicIndicators.annualOwnerInsurance, format: .currency)
-            resultRow("Mensualite de credit", value: project.economicIndicators.monthlyPayment, format: .currency)
+            resultRow("Mensualité de crédit", value: project.economicIndicators.monthlyPayment, format: .currency)
         } header: {
             Label("Revenus et charges", systemImage: "list.bullet.rectangle")
         }
 
         Section {
-            resultTextRow("Regime", value: project.draft.taxRegime.title)
+            resultTextRow("Régime", value: project.draft.taxRegime.title)
             resultRow("Taux marginal", value: project.draft.taxRate, format: .percent)
             resultRow("Imposition annuelle", value: project.indicators.taxes, format: .currency)
             resultRow("Imposition mensuelle", value: monthlyTaxes, format: .currency)
         } header: {
-            Label("Fiscalite", systemImage: "percent")
+            Label("Fiscalité", systemImage: "percent")
         }
 
         Section {
             resultRow("Loyer mensuel", value: monthlyRent, format: .signedCurrency)
             resultRow("Charges", value: -monthlyCondominiumFees, format: .signedCurrency)
-            resultRow("Taxe fonciere", value: -monthlyPropertyTax, format: .signedCurrency)
+            resultRow("Taxe foncière", value: -monthlyPropertyTax, format: .signedCurrency)
             resultRow("Assurance PNO", value: -monthlyOwnerInsurance, format: .signedCurrency)
-            resultRow("Mensualite de credit", value: -project.economicIndicators.monthlyPayment, format: .signedCurrency)
-            resultRow("Cashflow avant impots", value: project.economicResult.monthlyCashflowBeforeTax, format: .signedCurrency)
+            resultRow("Mensualité de credit", value: -project.economicIndicators.monthlyPayment, format: .signedCurrency)
+            resultRow("Cashflow avant impôts", value: project.economicResult.monthlyCashflowBeforeTax, format: .signedCurrency)
             resultRow("Imposition", value: -monthlyTaxes, format: .signedCurrency)
-            resultRow("Cashflow apres impots", value: project.result.monthlyCashflow, format: .signedCurrency)
+            resultRow("Cashflow apres impôts", value: project.result.monthlyCashflow, format: .signedCurrency)
         } header: {
             Label("Cashflow mensuel", systemImage: "arrow.left.arrow.right")
         }
@@ -140,7 +141,7 @@ struct InvestmentResultsDetailView: View {
         LabeledContent(title) {
             Text(format.string(from: value))
                 .font(.body.monospacedDigit())
-                .foregroundStyle(value < 0 ? .red : .secondary)
+                .foregroundStyle(value < 0 ? ProjectDetailPalette.loss : .secondary)
         }
     }
 
@@ -169,6 +170,12 @@ private enum ResultValueFormat {
             return "\(formattedValue) %"
         }
     }
+}
+
+private enum ProjectDetailPalette {
+    static let background = Color(red: 0.93, green: 0.97, blue: 0.96)
+    static let brand = Color(red: 0.02, green: 0.29, blue: 0.24)
+    static let loss = Color(red: 0.78, green: 0.18, blue: 0.16)
 }
 
 struct ProjectDetailView_Previews: PreviewProvider {

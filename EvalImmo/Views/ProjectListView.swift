@@ -41,7 +41,7 @@ struct ProjectListView: View {
                             projectPendingDeletion = nil
                         }
                     } message: {
-                        Text("Cette action supprimera definitivement \(projectTitle(for: project)).")
+                        Text("Cette action supprimera définitivement \(projectTitle(for: project)).")
                     }
                 }
             }
@@ -49,8 +49,9 @@ struct ProjectListView: View {
         .navigationTitle("Projets")
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
-        .background(Color(.systemGroupedBackground))
-        .tint(.teal)
+        .background(ProjectListPalette.background)
+        .tint(ProjectListPalette.brand)
+        .toolbarBackground(ProjectListPalette.background, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Nouveau projet", systemImage: "plus", action: onAddProject)
@@ -91,10 +92,21 @@ private struct EmptyProjectListView: View {
 
     var body: some View {
         ContentUnavailableView {
-            Label("Aucun projet", systemImage: "building.2")
+            VStack {
+                Image("valoria-launch-logo-concept")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 76, height: 76)
+                    .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                Text("Vos projets s'afficheront ici")
+                    .font(.title3)
+                    .bold()
+            }
         } actions: {
             Button("Nouveau projet", action: onAddProject)
                 .buttonStyle(.borderedProminent)
+                .tint(ProjectListPalette.brand)
         }
     }
 }
@@ -103,11 +115,38 @@ private struct ProjectPortfolioSummaryView: View {
     let projects: [InvestmentProjectSnapshot]
 
     var body: some View {
-        Section("Synthese") {
-            summaryRow("Projets sauvegardes", value: "\(projects.count)")
-            summaryRow("Investissement total", value: formatted(totalInvestment, fractionDigits: 0, suffix: "EUR"))
-            summaryRow("Cashflow mensuel total", value: formatted(monthlyCashflow, fractionDigits: 2, suffix: "EUR"))
+        Section {
+            VStack(alignment: .leading, spacing: 18) {
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Portefeuille")
+                            .font(.title3)
+                            .bold()
+                            .foregroundStyle(.white)
+
+                        Text("\(projects.count) projet\(projects.count > 1 ? "s" : "") suivi\(projects.count > 1 ? "s" : "")")
+                            .font(.subheadline)
+                            .foregroundStyle(.white.opacity(0.72))
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "building.columns")
+                        .font(.title2)
+                        .foregroundStyle(ProjectListPalette.gold)
+                }
+
+                HStack(spacing: 12) {
+                    portfolioMetric("Investi", value: formatted(totalInvestment, fractionDigits: 0, suffix: "EUR"))
+                    portfolioMetric("Cashflow", value: formatted(monthlyCashflow, fractionDigits: 2, suffix: "EUR"))
+                }
+            }
+            .padding(18)
+            .background(ProjectListPalette.brand)
+            .clipShape(RoundedRectangle(cornerRadius: 18))
         }
+        .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 8, trailing: 16))
+        .listRowBackground(Color.clear)
     }
 
     private var totalInvestment: Double {
@@ -118,12 +157,20 @@ private struct ProjectPortfolioSummaryView: View {
         projects.reduce(0) { $0 + $1.result.monthlyCashflow }
     }
 
-    private func summaryRow(_ title: String, value: String) -> some View {
-        LabeledContent(title) {
+    private func portfolioMetric(_ title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.footnote)
+                .foregroundStyle(.white.opacity(0.65))
+
             Text(value)
-                .font(.body.monospacedDigit())
-                .foregroundStyle(.secondary)
+                .font(.headline.monospacedDigit())
+                .foregroundStyle(.white)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(.white.opacity(0.10))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private func formatted(_ value: Double, fractionDigits: Int, suffix: String) -> String {
@@ -136,32 +183,44 @@ private struct ProjectRowView: View {
     let project: InvestmentProjectSnapshot
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(projectTitle)
-                        .font(.headline)
+        HStack(spacing: 14) {
+            RoundedRectangle(cornerRadius: 3)
+                .fill(cashflowColor)
+                .frame(width: 5)
 
-                    Text(project.createdAt.formatted(date: .abbreviated, time: .omitted))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(projectTitle)
+                            .font(.headline)
+                            .foregroundStyle(ProjectListPalette.ink)
+
+                        Text(project.createdAt.formatted(date: .abbreviated, time: .omitted))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+
+                    Text(formattedCashflow)
+                        .font(.headline.monospacedDigit())
+                        .foregroundStyle(cashflowColor)
                 }
 
-                Spacer()
+                HStack(spacing: 8) {
+                    Label("Bien + travaux", systemImage: "house")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
 
-                Text(formattedCashflow)
-                    .font(.headline.monospacedDigit())
-                    .foregroundStyle(project.result.monthlyCashflow < 0 ? .red : .green)
-            }
+                    Spacer()
 
-            LabeledContent("Montant bien + travaux") {
-                Text("\(projectAmount, specifier: "%.0f") EUR")
-                    .font(.subheadline.monospacedDigit())
+                    Text("\(projectAmount, specifier: "%.0f") EUR")
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(ProjectListPalette.ink)
+                }
             }
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 10)
     }
 
     private var projectAmount: Double {
@@ -172,6 +231,10 @@ private struct ProjectRowView: View {
         String(format: "%.2f EUR", project.result.monthlyCashflow)
     }
 
+    private var cashflowColor: Color {
+        project.result.monthlyCashflow < 0 ? ProjectListPalette.loss : ProjectListPalette.gain
+    }
+
     private var projectTitle: String {
         let name = project.draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else {
@@ -180,6 +243,15 @@ private struct ProjectRowView: View {
 
         return name
     }
+}
+
+private enum ProjectListPalette {
+    static let background = Color(red: 0.93, green: 0.97, blue: 0.96)
+    static let brand = Color(red: 0.02, green: 0.29, blue: 0.24)
+    static let ink = Color(red: 0.08, green: 0.13, blue: 0.14)
+    static let gain = Color(red: 0.00, green: 0.48, blue: 0.38)
+    static let loss = Color(red: 0.78, green: 0.18, blue: 0.16)
+    static let gold = Color(red: 0.91, green: 0.69, blue: 0.32)
 }
 
 struct ProjectListView_Previews: PreviewProvider {

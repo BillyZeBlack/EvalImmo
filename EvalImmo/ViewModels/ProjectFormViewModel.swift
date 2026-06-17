@@ -32,11 +32,11 @@ final class ProjectFormViewModel: ObservableObject {
         case .microFoncier:
             return "Abattement forfaitaire de 30% sur les revenus locatifs."
         case .microBIC:
-            return "Abattement forfaitaire de 50% sur les recettes meublees."
+            return "Abattement forfaitaire de 50% sur les recettes meublées."
         case .realFoncier:
-            return "Charges de copropriete et taxe fonciere deduites des loyers."
+            return "Charges de copropriété et taxe fonciere déduites des loyers."
         case .lmnpReal:
-            return "Charges deduites avec amortissement simplifie sur 30 ans."
+            return "Charges déduites avec amortissement simplifié sur 30 ans."
         }
     }
 

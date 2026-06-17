@@ -16,7 +16,7 @@ enum RentalType: String, CaseIterable, Equatable, Identifiable {
         case .bare:
             return "Location nue"
         case .furnished:
-            return "Location meublee"
+            return "Location meublée"
         }
     }
 }
@@ -34,11 +34,11 @@ enum TaxRegime: String, CaseIterable, Equatable, Identifiable {
         case .microFoncier:
             return "Micro-foncier"
         case .realFoncier:
-            return "Reel foncier"
+            return "Réel foncier"
         case .microBIC:
             return "Micro-BIC"
         case .lmnpReal:
-            return "LMNP reel"
+            return "LMNP réel"
         }
     }
 
