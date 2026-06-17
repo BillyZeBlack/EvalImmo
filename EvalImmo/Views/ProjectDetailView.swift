@@ -57,83 +57,18 @@ struct ProjectDetailView: View {
 struct InvestmentResultsDetailView: View {
     let project: InvestmentProjectSnapshot
 
-    private var monthlyRent: Double {
-        project.economicIndicators.annualRentalPrice / 12
-    }
-
-    private var monthlyCondominiumFees: Double {
-        project.economicIndicators.annualCondominiumFees / 12
-    }
-
-    private var monthlyPropertyTax: Double {
-        project.economicIndicators.annualPropertyTax / 12
-    }
-
-    private var monthlyOwnerInsurance: Double {
-        project.economicIndicators.annualOwnerInsurance / 12
-    }
-
-    private var monthlyTaxes: Double {
-        project.indicators.taxes / 12
-    }
-
     var body: some View {
         Section {
             resultRow("Prix total", value: project.costs.total, format: .currency)
-            resultRow("Rendement brut", value: project.economicResult.grossYield, format: .percent)
-            resultRow("Rendement net avant impôts", value: project.economicResult.netYieldBeforeTax, format: .percent)
-            resultRow("Rendement net-net", value: project.result.netNetYield, format: .percent)
-            resultRow("Cashflow apres impôts", value: project.result.monthlyCashflow, format: .currency)
+            InvestmentPerformanceSummaryView(project: project)
         } header: {
             Label("Synthese", systemImage: "chart.pie")
         }
 
         Section {
-            resultRow("Prix du bien", value: project.costs.price, format: .currency)
-            resultRow("Frais de notaire", value: project.costs.notaryFees, format: .currency)
-            resultRow("Frais d'agence", value: project.costs.agencyCosts, format: .currency)
-            resultRow("Travaux", value: project.costs.works, format: .currency)
-            resultRow("Apport", value: project.costs.downPayment, format: .currency)
-            resultRow("Montant financé", value: project.costs.financedAmount, format: .currency)
-            resultRow("Prix total", value: project.costs.total, format: .currency)
-        } header: {
-            Label("Acquisition", systemImage: "house")
-        }
-
-        Section {
-            resultRow("Loyer mensuel", value: monthlyRent, format: .currency)
-            resultRow("Loyers annuels", value: project.economicIndicators.annualRentalPrice, format: .currency)
-            resultRow("Charges mensuelles", value: monthlyCondominiumFees, format: .currency)
-            resultRow("Charges annuelles", value: project.economicIndicators.annualCondominiumFees, format: .currency)
-            resultRow("Taxe foncière mensuelle", value: monthlyPropertyTax, format: .currency)
-            resultRow("Taxe foncière annuelle", value: project.economicIndicators.annualPropertyTax, format: .currency)
-            resultRow("Assurance PNO mensuelle", value: monthlyOwnerInsurance, format: .currency)
-            resultRow("Assurance PNO annuelle", value: project.economicIndicators.annualOwnerInsurance, format: .currency)
-            resultRow("Mensualité de crédit", value: project.economicIndicators.monthlyPayment, format: .currency)
+            MonthlyFlowChartView(project: project)
         } header: {
             Label("Revenus et charges", systemImage: "list.bullet.rectangle")
-        }
-
-        Section {
-            resultTextRow("Régime", value: project.draft.taxRegime.title)
-            resultRow("Taux marginal", value: project.draft.taxRate, format: .percent)
-            resultRow("Imposition annuelle", value: project.indicators.taxes, format: .currency)
-            resultRow("Imposition mensuelle", value: monthlyTaxes, format: .currency)
-        } header: {
-            Label("Fiscalité", systemImage: "percent")
-        }
-
-        Section {
-            resultRow("Loyer mensuel", value: monthlyRent, format: .signedCurrency)
-            resultRow("Charges", value: -monthlyCondominiumFees, format: .signedCurrency)
-            resultRow("Taxe foncière", value: -monthlyPropertyTax, format: .signedCurrency)
-            resultRow("Assurance PNO", value: -monthlyOwnerInsurance, format: .signedCurrency)
-            resultRow("Mensualité de credit", value: -project.economicIndicators.monthlyPayment, format: .signedCurrency)
-            resultRow("Cashflow avant impôts", value: project.economicResult.monthlyCashflowBeforeTax, format: .signedCurrency)
-            resultRow("Imposition", value: -monthlyTaxes, format: .signedCurrency)
-            resultRow("Cashflow apres impôts", value: project.result.monthlyCashflow, format: .signedCurrency)
-        } header: {
-            Label("Cashflow mensuel", systemImage: "arrow.left.arrow.right")
         }
     }
 
@@ -145,12 +80,6 @@ struct InvestmentResultsDetailView: View {
         }
     }
 
-    private func resultTextRow(_ title: String, value: String) -> some View {
-        LabeledContent(title) {
-            Text(value)
-                .foregroundStyle(.secondary)
-        }
-    }
 }
 
 private enum ResultValueFormat {
