@@ -7,6 +7,7 @@ import SwiftUI
 
 @main
 struct EvalImmoApp: App {
+    @AppStorage("hasAcceptedDisclaimer") private var hasAcceptedDisclaimer = false
     @StateObject private var appState = AppState()
     @State private var isShowingLaunchSplash = true
 
@@ -22,7 +23,16 @@ struct EvalImmoApp: App {
                     }
                     .transition(.opacity)
                 }
+
+                if !isShowingLaunchSplash && !hasAcceptedDisclaimer {
+                    DisclaimerOverlayView {
+                        hasAcceptedDisclaimer = true
+                    }
+                    .transition(.opacity)
+                }
             }
+            .animation(.easeOut(duration: 0.25), value: isShowingLaunchSplash)
+            .animation(.easeOut(duration: 0.25), value: hasAcceptedDisclaimer)
         }
     }
 }

@@ -30,6 +30,7 @@
 		9F371AF5263AA67300FF5835 /* MonthlyFlowChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */; };
 		9F371AF7263AA67300FF5835 /* LaunchSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF6263AA67300FF5835 /* LaunchSplashView.swift */; };
 		9F371AF9263AA67300FF5835 /* ProjectComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AF8263AA67300FF5835 /* ProjectComparisonView.swift */; };
+		9F371AFB263AA67300FF5835 /* DisclaimerOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AFA263AA67300FF5835 /* DisclaimerOverlayView.swift */; };
 		9F4CADD626091456006BCF52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F4CADD526091456006BCF52 /* Assets.xcassets */; };
 		9F4CADD926091456006BCF52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F4CADD726091456006BCF52 /* LaunchScreen.storyboard */; };
 		9F4CADE426091456006BCF52 /* EvalImmoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4CADE326091456006BCF52 /* EvalImmoTests.swift */; };
@@ -77,6 +78,7 @@
 		9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyFlowChartView.swift; sourceTree = "<group>"; };
 		9F371AF6263AA67300FF5835 /* LaunchSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchSplashView.swift; sourceTree = "<group>"; };
 		9F371AF8263AA67300FF5835 /* ProjectComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectComparisonView.swift; sourceTree = "<group>"; };
+		9F371AFA263AA67300FF5835 /* DisclaimerOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerOverlayView.swift; sourceTree = "<group>"; };
 		9F4CADC926091455006BCF52 /* EvalImmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EvalImmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F4CADD526091456006BCF52 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9F4CADD826091456006BCF52 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		9F371ACA263AA67300FF5835 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9F371AFA263AA67300FF5835 /* DisclaimerOverlayView.swift */,
 				9F371AF2263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift */,
 				9F371AF6263AA67300FF5835 /* LaunchSplashView.swift */,
 				9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */,
@@ -381,6 +384,7 @@
 				9F371AF7263AA67300FF5835 /* LaunchSplashView.swift in Sources */,
 				9F371AF5263AA67300FF5835 /* MonthlyFlowChartView.swift in Sources */,
 				9F371AF9263AA67300FF5835 /* ProjectComparisonView.swift in Sources */,
+				9F371AFB263AA67300FF5835 /* DisclaimerOverlayView.swift in Sources */,
 				9F371AE3263AA67300FF5835 /* ProjectDetailView.swift in Sources */,
 				9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */,
 				9F371AE7263AA67300FF5835 /* InvestmentIndicators.swift in Sources */,
