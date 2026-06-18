@@ -8,7 +8,9 @@ import Foundation
 final class AppState: ObservableObject {
     enum Route: Hashable {
         case newProject
-        case editProject(UUID)
+        case editProject(UUID, ProjectFormMode = .update)
+        case duplicateProject(UUID)
+        case compareProjects([UUID])
         case projectDetail(UUID)
     }
 
@@ -24,8 +26,18 @@ final class AppState: ObservableObject {
     }
 
     @MainActor
-    func editProject(id: UUID) {
-        path.append(.editProject(id))
+    func editProject(id: UUID, mode: ProjectFormMode = .update) {
+        path.append(.editProject(id, mode))
+    }
+
+    @MainActor
+    func duplicateProject(id: UUID) {
+        path.append(.duplicateProject(id))
+    }
+
+    @MainActor
+    func compareProjects(ids: [UUID]) {
+        path.append(.compareProjects(ids))
     }
 
     @MainActor

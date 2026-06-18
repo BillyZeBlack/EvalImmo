@@ -5,6 +5,12 @@
 
 import SwiftUI
 
+enum ProjectFormMode: Hashable {
+    case create
+    case update
+    case duplicate
+}
+
 struct ProjectFormView: View {
     @StateObject private var viewModel: ProjectFormViewModel
     @State private var projectPendingSave: InvestmentProjectSnapshot?
@@ -12,24 +18,29 @@ struct ProjectFormView: View {
     @State private var isShowingSavePrompt = false
     @FocusState private var focusedField: ProjectFormField?
     private let editedProject: InvestmentProjectSnapshot?
+    private let mode: ProjectFormMode
     private let onSave: (InvestmentProjectSnapshot) -> Void
 
     init(
         viewModel: ProjectFormViewModel = ProjectFormViewModel(),
         editedProject: InvestmentProjectSnapshot? = nil,
+        mode: ProjectFormMode = .create,
         onSave: @escaping (InvestmentProjectSnapshot) -> Void = { _ in }
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.editedProject = editedProject
+        self.mode = mode
         self.onSave = onSave
     }
 
     init(
         project: InvestmentProjectSnapshot,
+        mode: ProjectFormMode = .update,
         onSave: @escaping (InvestmentProjectSnapshot) -> Void = { _ in }
     ) {
         _viewModel = StateObject(wrappedValue: ProjectFormViewModel(draft: project.draft, currentProject: project))
         self.editedProject = project
+        self.mode = mode
         self.onSave = onSave
     }
 
@@ -41,7 +52,7 @@ struct ProjectFormView: View {
             financingSection
             resultSection
         }
-        .navigationTitle(isEditing ? "Modifier le projet" : "Mon projet")
+        .navigationTitle(navigationTitle)
         .scrollContentBackground(.hidden)
         .background(ProjectFormPalette.background)
         .tint(ProjectFormPalette.brand)
@@ -289,8 +300,26 @@ struct ProjectFormView: View {
         editedProject != nil
     }
 
+    private var navigationTitle: String {
+        switch mode {
+        case .create:
+            return "Mon projet"
+        case .update:
+            return "Modifier le projet"
+        case .duplicate:
+            return "Nouveau scénario"
+        }
+    }
+
     private var saveButtonTitle: String {
-        isEditing ? "Mettre à jour" : "Sauvegarder"
+        switch mode {
+        case .create:
+            return "Sauvegarder"
+        case .update:
+            return "Mettre à jour"
+        case .duplicate:
+            return "Enregistrer"
+        }
     }
 
     private var saveButtonIcon: String {
@@ -298,15 +327,18 @@ struct ProjectFormView: View {
     }
 
     private var savePromptActionTitle: String {
-        isEditing ? "Mettre à jour" : "Sauvegarder"
+        saveButtonTitle
     }
 
     private var savePromptMessage: String {
-        if isEditing {
+        switch mode {
+        case .create:
+            return "Ajoutez un nom pour retrouver facilement ce projet dans la liste."
+        case .update:
             return "Vous pouvez ajuster le nom avant de mettre à jour ce projet."
+        case .duplicate:
+            return "Vous pouvez ajuster le nom avant d'enregistrer ce scénario."
         }
-
-        return "Ajoutez un nom pour retrouver facilement ce projet dans la liste."
     }
 
     private func projectForCurrentMode(from project: InvestmentProjectSnapshot) -> InvestmentProjectSnapshot {

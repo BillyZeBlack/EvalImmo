@@ -8,7 +8,23 @@ import SwiftUI
 struct ProjectListView: View {
     @ObservedObject var store: ProjectStore
     @State private var projectPendingDeletion: InvestmentProjectSnapshot?
+    @State private var isComparingProjects = false
+    @State private var selectedProjectIDs: Set<UUID> = []
     let onAddProject: () -> Void
+    let onDuplicateProject: (InvestmentProjectSnapshot) -> Void
+    let onCompareProjects: ([UUID]) -> Void
+
+    init(
+        store: ProjectStore,
+        onAddProject: @escaping () -> Void,
+        onDuplicateProject: @escaping (InvestmentProjectSnapshot) -> Void = { _ in },
+        onCompareProjects: @escaping ([UUID]) -> Void = { _ in }
+    ) {
+        self.store = store
+        self.onAddProject = onAddProject
+        self.onDuplicateProject = onDuplicateProject
+        self.onCompareProjects = onCompareProjects
+    }
 
     var body: some View {
         List {
@@ -18,28 +34,34 @@ struct ProjectListView: View {
                 ProjectPortfolioSummaryView(projects: store.projects)
 
                 ForEach(store.projects) { project in
-                    NavigationLink(value: AppState.Route.projectDetail(project.id)) {
-                        ProjectRowView(project: project)
-                    }
-                    .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            projectPendingDeletion = project
-                        } label: {
-                            Label("Supprimer", systemImage: "trash")
-                        }
-                    }
+                    projectListRow(for: project)
                 }
             }
         }
-        .navigationTitle("Projets")
+        .navigationTitle(isComparingProjects ? "Comparer" : "Projets")
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(ProjectListPalette.background)
         .tint(ProjectListPalette.brand)
         .toolbarBackground(ProjectListPalette.background, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Nouveau projet", systemImage: "plus", action: onAddProject)
+            if !isComparingProjects && store.projects.count >= ProjectComparisonLimits.minimumSelectionCount {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Comparer", systemImage: "chart.bar.xaxis") {
+                        startComparisonSelection()
+                    }
+                }
+            }
+
+            if !isComparingProjects {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Nouveau projet", systemImage: "plus", action: onAddProject)
+                }
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if isComparingProjects {
+                comparisonActionBar
             }
         }
         .confirmationDialog(
@@ -57,6 +79,66 @@ struct ProjectListView: View {
         } message: {
             Text("Cette action supprimera définitivement \(projectTitleForPendingDeletion).")
         }
+    }
+
+    @ViewBuilder
+    private func projectListRow(for project: InvestmentProjectSnapshot) -> some View {
+        if isComparingProjects {
+            Button {
+                toggleProjectSelection(project)
+            } label: {
+                ProjectSelectableRowView(
+                    project: project,
+                    isSelected: selectedProjectIDs.contains(project.id),
+                    isDisabled: isSelectionDisabled(for: project)
+                )
+            }
+            .buttonStyle(.plain)
+            .disabled(isSelectionDisabled(for: project))
+        } else {
+            NavigationLink(value: AppState.Route.projectDetail(project.id)) {
+                ProjectRowView(project: project)
+            }
+            .swipeActions(edge: .trailing) {
+                Button(role: .destructive) {
+                    projectPendingDeletion = project
+                } label: {
+                    Label("Supprimer", systemImage: "trash")
+                }
+
+                Button {
+                    onDuplicateProject(project)
+                } label: {
+                    Label("Dupliquer", systemImage: "doc.on.doc")
+                }
+                .tint(ProjectListPalette.brand)
+            }
+        }
+    }
+
+    private var comparisonActionBar: some View {
+        HStack(spacing: 12) {
+            Button("Annuler", action: cancelComparisonSelection)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .buttonStyle(.bordered)
+
+            Button("Valider") {
+                validateComparisonSelection()
+            }
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .buttonStyle(.borderedProminent)
+            .disabled(!canValidateComparison)
+        }
+        .controlSize(.large)
+        .buttonBorderShape(.roundedRectangle)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial)
+    }
+
+    private var canValidateComparison: Bool {
+        selectedProjectIDs.count >= ProjectComparisonLimits.minimumSelectionCount
+            && selectedProjectIDs.count <= ProjectComparisonLimits.maximumSelectionCount
     }
 
     private var deletionConfirmationBinding: Binding<Bool> {
@@ -92,6 +174,40 @@ struct ProjectListView: View {
         }
 
         return "\"\(name)\""
+    }
+
+    private func startComparisonSelection() {
+        selectedProjectIDs = []
+        isComparingProjects = true
+    }
+
+    private func cancelComparisonSelection() {
+        selectedProjectIDs = []
+        isComparingProjects = false
+    }
+
+    private func validateComparisonSelection() {
+        guard canValidateComparison else { return }
+
+        let selectedIDs = store.projects.compactMap { project in
+            selectedProjectIDs.contains(project.id) ? project.id : nil
+        }
+
+        cancelComparisonSelection()
+        onCompareProjects(selectedIDs)
+    }
+
+    private func isSelectionDisabled(for project: InvestmentProjectSnapshot) -> Bool {
+        !selectedProjectIDs.contains(project.id)
+            && selectedProjectIDs.count >= ProjectComparisonLimits.maximumSelectionCount
+    }
+
+    private func toggleProjectSelection(_ project: InvestmentProjectSnapshot) {
+        if selectedProjectIDs.contains(project.id) {
+            selectedProjectIDs.remove(project.id)
+        } else if selectedProjectIDs.count < ProjectComparisonLimits.maximumSelectionCount {
+            selectedProjectIDs.insert(project.id)
+        }
     }
 }
 
@@ -251,6 +367,42 @@ private struct ProjectRowView: View {
 
         return name
     }
+}
+
+private struct ProjectSelectableRowView: View {
+    let project: InvestmentProjectSnapshot
+    let isSelected: Bool
+    let isDisabled: Bool
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                .font(.title3)
+                .foregroundStyle(isSelected ? ProjectListPalette.brand : .secondary)
+                .frame(width: 28)
+
+            ProjectRowView(project: project)
+                .opacity(isDisabled ? 0.45 : 1)
+        }
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(projectTitle)
+        .accessibilityValue(isSelected ? "Sélectionné" : "Non sélectionné")
+    }
+
+    private var projectTitle: String {
+        let name = project.draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else {
+            return "Projet du \(project.createdAt.formatted(date: .abbreviated, time: .omitted))"
+        }
+
+        return name
+    }
+}
+
+enum ProjectComparisonLimits {
+    static let minimumSelectionCount = 2
+    static let maximumSelectionCount = 4
 }
 
 private enum ProjectListPalette {
