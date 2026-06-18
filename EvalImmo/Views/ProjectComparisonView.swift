@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct ProjectComparisonView: View {
+    @State private var shareItem: ProjectShareItem?
+    @State private var shareError: ComparisonShareError?
     let projects: [InvestmentProjectSnapshot]
 
     var body: some View {
@@ -35,7 +37,38 @@ struct ProjectComparisonView: View {
         .scrollContentBackground(.hidden)
         .background(ComparisonPalette.background)
         .toolbarBackground(ComparisonPalette.background, for: .navigationBar)
+        .toolbar {
+            if projects.count >= ProjectComparisonLimits.minimumSelectionCount {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Partager", systemImage: "square.and.arrow.up", action: shareComparison)
+                }
+            }
+        }
+        .sheet(item: $shareItem) { item in
+            ProjectShareSheet(activityItems: [item.url])
+        }
+        .alert(item: $shareError) { error in
+            Alert(
+                title: Text("Partage indisponible"),
+                message: Text(error.message),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
+
+    private func shareComparison() {
+        do {
+            let url = try ComparisonPDFExporter.export(projects: projects)
+            shareItem = ProjectShareItem(url: url)
+        } catch {
+            shareError = ComparisonShareError(message: error.localizedDescription)
+        }
+    }
+}
+
+private struct ComparisonShareError: Identifiable {
+    let id = UUID()
+    let message: String
 }
 
 private struct ComparisonYieldChartView: View {
