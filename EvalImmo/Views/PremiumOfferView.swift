@@ -7,8 +7,10 @@ import SwiftUI
 
 struct PremiumOfferView: View {
     let feature: PremiumFeature
-    let isPremiumUnlocked: Bool
-    let onUnlockPremium: () -> Void
+    @ObservedObject var premiumAccess: PremiumAccess
+    let onPremiumUnlocked: () -> Void
+    @State private var statusMessage: String?
+    @State private var isRestoringPurchases = false
 
     var body: some View {
         NavigationStack {
@@ -66,26 +68,95 @@ struct PremiumOfferView: View {
     }
 
     private var premiumAction: some View {
-        VStack(spacing: 10) {
-            if isPremiumUnlocked {
+        VStack(spacing: 12) {
+            if premiumAccess.isPremiumUnlocked {
                 Label("Premium est actif", systemImage: "checkmark.seal.fill")
                     .font(.headline)
                     .foregroundStyle(PremiumOfferPalette.gain)
                     .frame(maxWidth: .infinity, minHeight: 50)
             } else {
-                Button(action: onUnlockPremium) {
-                    Text("Débloquer Premium")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, minHeight: 50)
+                Button {
+                    Task {
+                        await purchasePremium()
+                    }
+                } label: {
+                    if premiumAccess.isPurchasing {
+                        ProgressView()
+                            .tint(.white)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                    } else {
+                        Text(purchaseButtonTitle)
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                    }
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(PremiumOfferPalette.brand)
+                .disabled(premiumAccess.premiumProduct == nil || premiumAccess.isLoadingProducts || premiumAccess.isPurchasing)
 
-                Text("Activation locale temporaire pour valider le parcours avant l'intégration StoreKit.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+                Button("Restaurer mes achats") {
+                    Task {
+                        await restorePurchases()
+                    }
+                }
+                .buttonStyle(.bordered)
+                .disabled(premiumAccess.isPurchasing || isRestoringPurchases)
+
+                if isRestoringPurchases {
+                    ProgressView()
+                }
+
+                if let statusMessage {
+                    Text(statusMessage)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                } else if let productLoadingMessage = premiumAccess.productLoadingMessage {
+                    Text(productLoadingMessage)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                #if DEBUG
+                Button("Activer Premium en local") {
+                    premiumAccess.unlockPremiumForTesting()
+                    onPremiumUnlocked()
+                }
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(PremiumOfferPalette.brand)
+                #endif
             }
+        }
+    }
+
+    private var purchaseButtonTitle: String {
+        if premiumAccess.isLoadingProducts {
+            "Chargement..."
+        } else if let premiumProduct = premiumAccess.premiumProduct {
+            "Débloquer Premium - \(premiumProduct.displayPrice)"
+        } else {
+            "Offre indisponible"
+        }
+    }
+
+    private func purchasePremium() async {
+        let result = await premiumAccess.purchasePremium()
+        handle(result)
+    }
+
+    private func restorePurchases() async {
+        isRestoringPurchases = true
+        let result = await premiumAccess.restorePurchases()
+        isRestoringPurchases = false
+        handle(result)
+    }
+
+    private func handle(_ result: PremiumPurchaseResult) {
+        statusMessage = result.message
+
+        if result.isSuccess {
+            onPremiumUnlocked()
         }
     }
 

@@ -35,6 +35,9 @@ struct EvalImmoApp: App {
             }
             .animation(.easeOut(duration: 0.25), value: isShowingLaunchSplash)
             .animation(.easeOut(duration: 0.25), value: hasAcceptedDisclaimer)
+            .task {
+                await premiumAccess.observeTransactionUpdates()
+            }
         }
     }
 }

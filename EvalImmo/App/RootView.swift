@@ -86,9 +86,8 @@ struct RootView: View {
         .sheet(item: $premiumFeature) { feature in
             PremiumOfferView(
                 feature: feature,
-                isPremiumUnlocked: premiumAccess.isPremiumUnlocked,
-                onUnlockPremium: {
-                    premiumAccess.unlockPremiumForTesting()
+                premiumAccess: premiumAccess,
+                onPremiumUnlocked: {
                     premiumFeature = nil
                 }
             )
