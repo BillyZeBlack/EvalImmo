@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct ProjectDetailView: View {
+    @State private var shareItem: ProjectShareItem?
+    @State private var shareError: ProjectShareError?
     let project: InvestmentProjectSnapshot
     let onEditProject: () -> Void
 
@@ -31,9 +33,20 @@ struct ProjectDetailView: View {
         .tint(ProjectDetailPalette.brand)
         .toolbarBackground(ProjectDetailPalette.background, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button("Partager", systemImage: "square.and.arrow.up", action: shareProject)
                 Button("Modifier", systemImage: "pencil", action: onEditProject)
             }
+        }
+        .sheet(item: $shareItem) { item in
+            ProjectShareSheet(activityItems: [item.url])
+        }
+        .alert(item: $shareError) { error in
+            Alert(
+                title: Text("Partage indisponible"),
+                message: Text(error.message),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 
@@ -52,6 +65,20 @@ struct ProjectDetailView: View {
                 .foregroundStyle(.secondary)
         }
     }
+
+    private func shareProject() {
+        do {
+            let url = try ProjectPDFExporter.export(project: project)
+            shareItem = ProjectShareItem(url: url)
+        } catch {
+            shareError = ProjectShareError(message: error.localizedDescription)
+        }
+    }
+}
+
+private struct ProjectShareError: Identifiable {
+    let id = UUID()
+    let message: String
 }
 
 struct InvestmentResultsDetailView: View {
