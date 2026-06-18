@@ -9,6 +9,18 @@ struct ProjectComparisonView: View {
     @State private var shareItem: ProjectShareItem?
     @State private var shareError: ComparisonShareError?
     let projects: [InvestmentProjectSnapshot]
+    let canShareComparison: Bool
+    let onRequestPremium: () -> Void
+
+    init(
+        projects: [InvestmentProjectSnapshot],
+        canShareComparison: Bool = true,
+        onRequestPremium: @escaping () -> Void = {}
+    ) {
+        self.projects = projects
+        self.canShareComparison = canShareComparison
+        self.onRequestPremium = onRequestPremium
+    }
 
     var body: some View {
         List {
@@ -57,6 +69,11 @@ struct ProjectComparisonView: View {
     }
 
     private func shareComparison() {
+        guard canShareComparison else {
+            onRequestPremium()
+            return
+        }
+
         do {
             let url = try ComparisonPDFExporter.export(projects: projects)
             shareItem = ProjectShareItem(url: url)

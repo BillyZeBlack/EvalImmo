@@ -9,11 +9,20 @@ struct ProjectDetailView: View {
     @State private var shareItem: ProjectShareItem?
     @State private var shareError: ProjectShareError?
     let project: InvestmentProjectSnapshot
+    let canShareProject: Bool
     let onEditProject: () -> Void
+    let onRequestPremium: () -> Void
 
-    init(project: InvestmentProjectSnapshot, onEditProject: @escaping () -> Void = {}) {
+    init(
+        project: InvestmentProjectSnapshot,
+        canShareProject: Bool = true,
+        onEditProject: @escaping () -> Void = {},
+        onRequestPremium: @escaping () -> Void = {}
+    ) {
         self.project = project
+        self.canShareProject = canShareProject
         self.onEditProject = onEditProject
+        self.onRequestPremium = onRequestPremium
     }
 
     var body: some View {
@@ -67,6 +76,11 @@ struct ProjectDetailView: View {
     }
 
     private func shareProject() {
+        guard canShareProject else {
+            onRequestPremium()
+            return
+        }
+
         do {
             let url = try ProjectPDFExporter.export(project: project)
             shareItem = ProjectShareItem(url: url)

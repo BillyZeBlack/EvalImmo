@@ -33,6 +33,8 @@
 		9F371AFB263AA67300FF5835 /* DisclaimerOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AFA263AA67300FF5835 /* DisclaimerOverlayView.swift */; };
 		9F371AFD263AA67300FF5835 /* ProjectPDFShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AFC263AA67300FF5835 /* ProjectPDFShare.swift */; };
 		9F371AFF263AA67300FF5835 /* ComparisonPDFShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371AFE263AA67300FF5835 /* ComparisonPDFShare.swift */; };
+		9F371B01263AA67300FF5835 /* PremiumAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371B00263AA67300FF5835 /* PremiumAccess.swift */; };
+		9F371B03263AA67300FF5835 /* PremiumOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F371B02263AA67300FF5835 /* PremiumOfferView.swift */; };
 		9F4CADD626091456006BCF52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F4CADD526091456006BCF52 /* Assets.xcassets */; };
 		9F4CADD926091456006BCF52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F4CADD726091456006BCF52 /* LaunchScreen.storyboard */; };
 		9F4CADE426091456006BCF52 /* EvalImmoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4CADE326091456006BCF52 /* EvalImmoTests.swift */; };
@@ -83,6 +85,8 @@
 		9F371AFA263AA67300FF5835 /* DisclaimerOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerOverlayView.swift; sourceTree = "<group>"; };
 		9F371AFC263AA67300FF5835 /* ProjectPDFShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPDFShare.swift; sourceTree = "<group>"; };
 		9F371AFE263AA67300FF5835 /* ComparisonPDFShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonPDFShare.swift; sourceTree = "<group>"; };
+		9F371B00263AA67300FF5835 /* PremiumAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumAccess.swift; sourceTree = "<group>"; };
+		9F371B02263AA67300FF5835 /* PremiumOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumOfferView.swift; sourceTree = "<group>"; };
 		9F4CADC926091455006BCF52 /* EvalImmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EvalImmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F4CADD526091456006BCF52 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9F4CADD826091456006BCF52 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -161,6 +165,7 @@
 				9F371AF2263AA67300FF5835 /* InvestmentPerformanceSummaryView.swift */,
 				9F371AF6263AA67300FF5835 /* LaunchSplashView.swift */,
 				9F371AF4263AA67300FF5835 /* MonthlyFlowChartView.swift */,
+				9F371B02263AA67300FF5835 /* PremiumOfferView.swift */,
 				9F371AF8263AA67300FF5835 /* ProjectComparisonView.swift */,
 				9F371AE0263AA67300FF5835 /* ProjectDetailView.swift */,
 				9F371ABD263AA67300FF5835 /* ProjectFormView.swift */,
@@ -191,6 +196,7 @@
 			children = (
 				9F371AD7263AA67300FF5835 /* AppState.swift */,
 				9F371AD2263AA67300FF5835 /* EvalImmoApp.swift */,
+				9F371B00263AA67300FF5835 /* PremiumAccess.swift */,
 				9F371AD3263AA67300FF5835 /* RootView.swift */,
 			);
 			path = App;
@@ -396,9 +402,11 @@
 				9F371AFD263AA67300FF5835 /* ProjectPDFShare.swift in Sources */,
 				9F371AC3263AA67300FF5835 /* ProjectFormViewModel.swift in Sources */,
 				9F371AE7263AA67300FF5835 /* InvestmentIndicators.swift in Sources */,
+				9F371B01263AA67300FF5835 /* PremiumAccess.swift in Sources */,
 				9F371AE1263AA67300FF5835 /* ProjectStore.swift in Sources */,
 				9F371AD5263AA67300FF5835 /* RootView.swift in Sources */,
 				9F371AE2263AA67300FF5835 /* ProjectListView.swift in Sources */,
+				9F371B03263AA67300FF5835 /* PremiumOfferView.swift in Sources */,
 				9F371AED263AA67300FF5835 /* InvestmentEconomicIndicators.swift in Sources */,
 				9F371AE9263AA67300FF5835 /* InvestmentYieldResult.swift in Sources */,
 				9F371AEB263AA67300FF5835 /* RentalConfiguration.swift in Sources */,

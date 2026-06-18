@@ -10,20 +10,26 @@ struct ProjectListView: View {
     @State private var projectPendingDeletion: InvestmentProjectSnapshot?
     @State private var isComparingProjects = false
     @State private var selectedProjectIDs: Set<UUID> = []
+    let access: FeatureAccess
     let onAddProject: () -> Void
     let onDuplicateProject: (InvestmentProjectSnapshot) -> Void
     let onCompareProjects: ([UUID]) -> Void
+    let onRequestPremium: (PremiumFeature) -> Void
 
     init(
         store: ProjectStore,
+        access: FeatureAccess = FeatureAccess(isPremium: true, projectCount: 0),
         onAddProject: @escaping () -> Void,
         onDuplicateProject: @escaping (InvestmentProjectSnapshot) -> Void = { _ in },
-        onCompareProjects: @escaping ([UUID]) -> Void = { _ in }
+        onCompareProjects: @escaping ([UUID]) -> Void = { _ in },
+        onRequestPremium: @escaping (PremiumFeature) -> Void = { _ in }
     ) {
         self.store = store
+        self.access = access
         self.onAddProject = onAddProject
         self.onDuplicateProject = onDuplicateProject
         self.onCompareProjects = onCompareProjects
+        self.onRequestPremium = onRequestPremium
     }
 
     var body: some View {
@@ -48,7 +54,7 @@ struct ProjectListView: View {
             if !isComparingProjects && store.projects.count >= ProjectComparisonLimits.minimumSelectionCount {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Comparer", systemImage: "chart.bar.xaxis") {
-                        startComparisonSelection()
+                        startComparisonSelectionIfAvailable()
                     }
                 }
             }
@@ -107,7 +113,7 @@ struct ProjectListView: View {
                 }
 
                 Button {
-                    onDuplicateProject(project)
+                    duplicateProject(project)
                 } label: {
                     Label("Dupliquer", systemImage: "doc.on.doc")
                 }
@@ -181,6 +187,14 @@ struct ProjectListView: View {
         isComparingProjects = true
     }
 
+    private func startComparisonSelectionIfAvailable() {
+        if access.canCompareProjects {
+            startComparisonSelection()
+        } else {
+            onRequestPremium(.comparison)
+        }
+    }
+
     private func cancelComparisonSelection() {
         selectedProjectIDs = []
         isComparingProjects = false
@@ -188,6 +202,10 @@ struct ProjectListView: View {
 
     private func validateComparisonSelection() {
         guard canValidateComparison else { return }
+        guard access.canCompareProjects else {
+            onRequestPremium(.comparison)
+            return
+        }
 
         let selectedIDs = store.projects.compactMap { project in
             selectedProjectIDs.contains(project.id) ? project.id : nil
@@ -207,6 +225,14 @@ struct ProjectListView: View {
             selectedProjectIDs.remove(project.id)
         } else if selectedProjectIDs.count < ProjectComparisonLimits.maximumSelectionCount {
             selectedProjectIDs.insert(project.id)
+        }
+    }
+
+    private func duplicateProject(_ project: InvestmentProjectSnapshot) {
+        if access.canDuplicateProject {
+            onDuplicateProject(project)
+        } else {
+            onRequestPremium(.duplication)
         }
     }
 }

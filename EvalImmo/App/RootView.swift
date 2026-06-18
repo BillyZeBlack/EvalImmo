@@ -7,16 +7,20 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var premiumAccess: PremiumAccess
     @StateObject private var projectStore = ProjectStore(repository: FileProjectRepository())
     @State private var hasPresentedInitialProjectForm = false
+    @State private var premiumFeature: PremiumFeature?
 
     var body: some View {
         NavigationStack(path: $appState.path) {
             ProjectListView(
                 store: projectStore,
-                onAddProject: appState.showNewProject,
+                access: featureAccess,
+                onAddProject: addProject,
                 onDuplicateProject: duplicateProject,
-                onCompareProjects: { appState.compareProjects(ids: $0) }
+                onCompareProjects: compareProjects,
+                onRequestPremium: showPremiumOffer
             )
             .onAppear(perform: presentInitialProjectFormIfNeeded)
             .navigationDestination(for: AppState.Route.self) { route in
@@ -54,14 +58,20 @@ struct RootView: View {
                     }
                 case .compareProjects(let ids):
                     let projects = ids.compactMap { projectStore.project(with: $0) }
-                    ProjectComparisonView(projects: projects)
+                    ProjectComparisonView(
+                        projects: projects,
+                        canShareComparison: featureAccess.canSharePDF,
+                        onRequestPremium: { showPremiumOffer(for: .comparisonPDFShare) }
+                    )
                 case .projectDetail(let id):
                     if let project = projectStore.project(with: id) {
                         ProjectDetailView(
                             project: project,
+                            canShareProject: featureAccess.canSharePDF,
                             onEditProject: {
                                 appState.editProject(id: project.id)
-                            }
+                            },
+                            onRequestPremium: { showPremiumOffer(for: .projectPDFShare) }
                         )
                     } else {
                         ContentUnavailableView(
@@ -73,6 +83,20 @@ struct RootView: View {
                 }
             }
         }
+        .sheet(item: $premiumFeature) { feature in
+            PremiumOfferView(
+                feature: feature,
+                isPremiumUnlocked: premiumAccess.isPremiumUnlocked,
+                onUnlockPremium: {
+                    premiumAccess.unlockPremiumForTesting()
+                    premiumFeature = nil
+                }
+            )
+        }
+    }
+
+    private var featureAccess: FeatureAccess {
+        premiumAccess.access(projectCount: projectStore.projects.count)
     }
 
     private func presentInitialProjectFormIfNeeded() {
@@ -85,8 +109,35 @@ struct RootView: View {
     }
 
     @MainActor
+    private func addProject() {
+        if featureAccess.canCreateProject {
+            appState.showNewProject()
+        } else {
+            showPremiumOffer(for: .additionalProject)
+        }
+    }
+
+    @MainActor
     private func duplicateProject(_ project: InvestmentProjectSnapshot) {
-        appState.duplicateProject(id: project.id)
+        if featureAccess.canDuplicateProject {
+            appState.duplicateProject(id: project.id)
+        } else {
+            showPremiumOffer(for: .duplication)
+        }
+    }
+
+    @MainActor
+    private func compareProjects(ids: [UUID]) {
+        if featureAccess.canCompareProjects {
+            appState.compareProjects(ids: ids)
+        } else {
+            showPremiumOffer(for: .comparison)
+        }
+    }
+
+    @MainActor
+    private func showPremiumOffer(for feature: PremiumFeature) {
+        premiumFeature = feature
     }
 
     private func duplicatedProject(from project: InvestmentProjectSnapshot) -> InvestmentProjectSnapshot {

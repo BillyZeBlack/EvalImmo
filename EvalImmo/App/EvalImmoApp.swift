@@ -9,6 +9,7 @@ import SwiftUI
 struct EvalImmoApp: App {
     @AppStorage("hasAcceptedDisclaimer") private var hasAcceptedDisclaimer = false
     @StateObject private var appState = AppState()
+    @StateObject private var premiumAccess = PremiumAccess()
     @State private var isShowingLaunchSplash = true
 
     var body: some Scene {
@@ -16,6 +17,7 @@ struct EvalImmoApp: App {
             ZStack {
                 RootView()
                     .environmentObject(appState)
+                    .environmentObject(premiumAccess)
 
                 if isShowingLaunchSplash {
                     LaunchSplashView {
