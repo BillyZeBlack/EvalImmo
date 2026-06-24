@@ -185,9 +185,10 @@ struct ProjectFormView: View {
                 suffix: "EUR/an"
             )
 
-            Picker(selection: $viewModel.draft.taxRate) {
+            Picker(selection: taxRateSelectionBinding) {
+                Text("À sélectionner").tag(Double?.none)
                 ForEach(viewModel.taxRates, id: \.self) { rate in
-                    Text("\(rate, specifier: "%.0f")%").tag(rate)
+                    Text("\(rate, specifier: "%.0f")%").tag(Optional(rate))
                 }
             } label: {
                 LabeledFieldTitle(
@@ -486,6 +487,15 @@ struct ProjectFormView: View {
             },
             set: { taxRegime in
                 viewModel.selectTaxRegime(taxRegime)
+            }
+        )
+    }
+
+    private var taxRateSelectionBinding: Binding<Double?> {
+        Binding(
+            get: { viewModel.taxRateSelection },
+            set: { taxRate in
+                viewModel.selectTaxRate(taxRate)
             }
         )
     }

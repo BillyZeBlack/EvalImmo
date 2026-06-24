@@ -9,6 +9,7 @@ final class ProjectFormViewModel: ObservableObject {
     @Published var draft: InvestmentProjectDraft
     @Published private(set) var currentProject: InvestmentProjectSnapshot?
     @Published var errorMessage: String?
+    @Published private(set) var hasSelectedTaxRate: Bool
 
     let taxRates: [Double] = [0, 11, 30, 41, 45]
 
@@ -21,6 +22,7 @@ final class ProjectFormViewModel: ObservableObject {
     ) {
         self.draft = draft
         self.currentProject = currentProject
+        self.hasSelectedTaxRate = currentProject != nil || draft.taxRate != 0
         self.calculator = calculator
         normalizeTaxRegime()
     }
@@ -42,6 +44,10 @@ final class ProjectFormViewModel: ObservableObject {
         }
     }
 
+    var taxRateSelection: Double? {
+        hasSelectedTaxRate ? draft.taxRate : nil
+    }
+
     @MainActor
     func selectRentalType(_ rentalType: RentalType) {
         draft.rentalType = rentalType
@@ -58,6 +64,22 @@ final class ProjectFormViewModel: ObservableObject {
     }
 
     @MainActor
+    func selectTaxRate(_ taxRate: Double?) {
+        guard let taxRate else {
+            draft.taxRate = 0
+            hasSelectedTaxRate = false
+            clearCurrentCalculation()
+            return
+        }
+
+        guard taxRates.contains(taxRate) else { return }
+
+        draft.taxRate = taxRate
+        hasSelectedTaxRate = true
+        clearCurrentCalculation()
+    }
+
+    @MainActor
     func calculate() {
         do {
             normalizeTaxRegime()
@@ -69,6 +91,9 @@ final class ProjectFormViewModel: ObservableObject {
         } catch InvestmentCalculationError.ineligibleTaxRegime {
             currentProject = nil
             errorMessage = "Le regime fiscal choisi n'est pas compatible avec les revenus annuels saisis."
+        } catch let error as ProjectFormValidationError {
+            currentProject = nil
+            errorMessage = error.message
         } catch {
             currentProject = nil
             errorMessage = "Impossible de calculer les indicateurs."
@@ -87,6 +112,8 @@ final class ProjectFormViewModel: ObservableObject {
             errorMessage = "Le projet doit etre calcule avec un prix total valide."
         } catch InvestmentCalculationError.ineligibleTaxRegime {
             errorMessage = "Le regime fiscal choisi n'est pas compatible avec les revenus annuels saisis."
+        } catch let error as ProjectFormValidationError {
+            errorMessage = error.message
         } catch {
             errorMessage = "Impossible de sauvegarder le projet."
         }
@@ -107,6 +134,8 @@ final class ProjectFormViewModel: ObservableObject {
     }
 
     private func makeProjectSnapshot() throws -> InvestmentProjectSnapshot {
+        try validateDraft()
+
         let monthlyPropertyTax = draft.annualPropertyTax / 12
         let costs = try calculator.costs(
             price: draft.purchasePrice,
@@ -151,5 +180,72 @@ final class ProjectFormViewModel: ObservableObject {
             indicators: indicators,
             result: result
         )
+    }
+
+    private func validateDraft() throws {
+        if let validationError = ProjectFormValidationError.first(for: draft, hasSelectedTaxRate: hasSelectedTaxRate) {
+            throw validationError
+        }
+    }
+}
+
+private enum ProjectFormValidationError: Error {
+    case negativeAmount
+    case missingNotaryFees
+    case missingMonthlyRent
+    case missingPropertyTax
+    case missingTaxRate
+
+    static func first(for draft: InvestmentProjectDraft, hasSelectedTaxRate: Bool) -> ProjectFormValidationError? {
+        let amounts = [
+            draft.purchasePrice,
+            draft.notaryFees,
+            draft.agencyCosts,
+            draft.worksCost,
+            draft.downPayment,
+            draft.monthlyRent,
+            draft.monthlyCondominiumFees,
+            draft.annualPropertyTax,
+            draft.annualOwnerInsurance,
+            draft.annualAccountantFees,
+            draft.monthlyPayment
+        ]
+
+        guard amounts.allSatisfy({ $0 >= 0 }) else {
+            return .negativeAmount
+        }
+
+        guard draft.notaryFees > 0 else {
+            return .missingNotaryFees
+        }
+
+        guard draft.monthlyRent > 0 else {
+            return .missingMonthlyRent
+        }
+
+        guard draft.annualPropertyTax > 0 else {
+            return .missingPropertyTax
+        }
+
+        guard hasSelectedTaxRate else {
+            return .missingTaxRate
+        }
+
+        return nil
+    }
+
+    var message: String {
+        switch self {
+        case .negativeAmount:
+            return "Les montants saisis doivent etre superieurs ou egaux a zero."
+        case .missingNotaryFees:
+            return "Les frais de notaire sont obligatoires et doivent etre superieurs a zero."
+        case .missingMonthlyRent:
+            return "Le loyer mensuel est obligatoire et doit etre superieur a zero."
+        case .missingPropertyTax:
+            return "La taxe fonciere est obligatoire et doit etre superieure a zero."
+        case .missingTaxRate:
+            return "Selectionnez un taux marginal d'imposition. Le taux 0% est possible s'il correspond a votre situation."
+        }
     }
 }
