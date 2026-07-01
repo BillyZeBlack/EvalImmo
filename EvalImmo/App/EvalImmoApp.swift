@@ -33,6 +33,7 @@ struct EvalImmoApp: App {
                     .transition(.opacity)
                 }
             }
+            .preferredColorScheme(.light)
             .animation(.easeOut(duration: 0.25), value: isShowingLaunchSplash)
             .animation(.easeOut(duration: 0.25), value: hasAcceptedDisclaimer)
             .task {
