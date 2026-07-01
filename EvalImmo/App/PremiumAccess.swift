@@ -71,7 +71,7 @@ struct FeatureAccess {
 
 @MainActor
 final class PremiumAccess: ObservableObject {
-    static let premiumProductID = "valoria_premium_9.99"
+    static let premiumProductID = "valoria_premium_unlock"
 
     @Published private(set) var isPremiumUnlocked: Bool
     @Published private(set) var premiumProduct: Product?
